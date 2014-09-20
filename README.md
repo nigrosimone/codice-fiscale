@@ -5,6 +5,7 @@ Classe PHP per la validazione dei Codici Fiscali italiani a 16 caratteri
 
 Esempio di utilizzo
 
+```php
 <?php
 require 'CodiceFiscale.php';
 
@@ -14,3 +15,4 @@ if( $cf->ValidaCodiceFiscale('MRARSS75P14H501I') )
     echo 'Codice fiscale corretto';
 else
     echo 'Codice fiscale non corretto';
+```
