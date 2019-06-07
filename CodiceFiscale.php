@@ -256,24 +256,24 @@ class CodiceFiscale
 			$CodiceFiscaleAdattato = implode($CodiceFiscaleArray);
 			
 			// Estraggo i dati
-			$this ->Sesso         = ((int)(substr($CodiceFiscaleAdattato,9,2) > 40) ? self::CHAR_FEMMINA : self::CHAR_MASCHIO);
-			$this ->ComuneNascita = substr($CodiceFiscaleAdattato, 11, 4);
-			$this ->AnnoNascita   = substr($CodiceFiscaleAdattato, 6,  2);
-			$this ->GiornoNascita = substr($CodiceFiscaleAdattato, 9,  2);
-			$this ->MeseNascita   = $this->ListaDecMesi[substr($CodiceFiscaleAdattato,8,1)];
+			$this->Sesso         = ((int)(substr($CodiceFiscaleAdattato,9,2) > 40) ? self::CHAR_FEMMINA : self::CHAR_MASCHIO);
+			$this->ComuneNascita = substr($CodiceFiscaleAdattato, 11, 4);
+			$this->AnnoNascita   = substr($CodiceFiscaleAdattato, 6,  2);
+			$this->GiornoNascita = substr($CodiceFiscaleAdattato, 9,  2);
+			$this->MeseNascita   = $this->ListaDecMesi[substr($CodiceFiscaleAdattato,8,1)];
 
 			// Recupero giorno di nascita se Sesso=F
 			if($this->Sesso == self::CHAR_FEMMINA) 
 			{
-				$this ->GiornoNascita = $this ->GiornoNascita - 40;
+				$this->GiornoNascita = $this->GiornoNascita - 40;
 				
-				if (strlen($this ->GiornoNascita)===1)
-					$this ->GiornoNascita = '0'.$this ->GiornoNascita;
+				if (strlen($this->GiornoNascita)===1)
+					$this->GiornoNascita = '0'.$this->GiornoNascita;
 			}
 			
 			// Controlli teminati
-			$this ->isValido = true;
-			$this ->Errore   = null;
+			$this->isValido = true;
+			$this->Errore   = null;
 		}
 		catch(\Exception $e)
 		{
