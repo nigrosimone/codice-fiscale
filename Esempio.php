@@ -12,7 +12,7 @@ foreach ($CodiciDaValidare as $CodiceDaValidare)
 
 	if( $cf->ValidaCodiceFiscale($CodiceDaValidare) )
 	{
-		echo '<p style="color: green">Codice ficale corretto</p>';
+		echo '<p style="color: green">Codice fiscale corretto</p>';
 		printf('<p>Giorno: %s</p>', $cf->GetGiornoNascita());
 		printf('<p>Mese: %s</p>',   $cf->GetMeseNascita());
 		printf('<p>Anno: %s</p>',   $cf->GetAnnoNascita());
