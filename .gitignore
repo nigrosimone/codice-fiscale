@@ -1,0 +1,14 @@
+.idea/
+
+# Visual Studio XDebug
+.vscode
+
+# Temp file from MacOS
+._*.*
+
+# Aws S3 Files And Folders
+vendor
+
+.DS_Store
+
+.phpunit.result.cache

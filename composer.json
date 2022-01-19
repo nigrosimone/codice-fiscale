@@ -1,0 +1,17 @@
+{
+  "name":        "nigrosimone/codicefiscale",
+  "type":        "project",
+  "description": "Checks for Italian Codice Fiscale",
+  "autoload": {
+      "psr-4": {
+      }
+  },
+  "autoload-dev": {
+    "psr-4": { "tests\\": "tests" }
+  },
+  "require": {
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.5"
+  }
+}
