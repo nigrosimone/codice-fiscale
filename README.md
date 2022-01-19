@@ -4,7 +4,7 @@ CodiceFiscale
 Classe PHP per la validazione dei Codici Fiscali italiani a 16 caratteri
 
 ## Installazione
-Usa il dependancy mananger [composer] per installare `nigrosimone/codicefiscale`:
+Usa il dependancy mananger composer per installare `nigrosimone/codicefiscale`:
 ```bash
 composer require nigrosimone/codicefiscale:dev-master
 ```
