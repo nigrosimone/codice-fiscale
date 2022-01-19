@@ -2,6 +2,7 @@
   "name":        "nigrosimone/codicefiscale",
   "type":        "project",
   "description": "Checks for Italian Codice Fiscale",
+  "license": "MIT",
   "autoload": {
       "psr-4": {
       }
