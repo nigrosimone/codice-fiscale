@@ -29,6 +29,8 @@ class CodiceFiscaleTest extends TestCase
     public function goodDataProvider(): array
     {
         return [
+            ['MRARSS75P14H501I'],
+            ['MRARSS82M56F205J'],
             ['LRNCST94B08F104C'],
             ['LRNCST94B08F10QZ'],
             ['LRNCST94B08F1L4N'],
@@ -45,6 +47,7 @@ class CodiceFiscaleTest extends TestCase
     public function badDataProvider(): array
     {
         return [
+            ['MRARSS82M56F205I'],
             ['LRNCST94B08F104Z'],
             ['LRNCST94B08F104'],
             ['1RNCST94B08F104Z'],
