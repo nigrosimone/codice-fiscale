@@ -25,6 +25,8 @@ else
     echo 'Codice fiscale non corretto';
 ```
 
+Demo [online](https://phpsandbox.io/e/x/h1r2e)
+
 ## Sviluppo
 
 Clona il progetto:
