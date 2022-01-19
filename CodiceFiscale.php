@@ -210,10 +210,6 @@ class CodiceFiscale
 			if ( strlen($CodiceFiscale) !== 16) 
 				$this->RaiseException(1);
 
-			// Controllo che la forma sia corretta
-			if( !preg_match(self::REGEX_CODICEFISCALE, $CodiceFiscale) ) 
-				$this->RaiseException(2);
-
 			// Converto in maiuscolo
 			$CodiceFiscale = strtoupper($CodiceFiscale);
 				
@@ -254,6 +250,10 @@ class CodiceFiscale
 			
 			// Converto l'array in stringa
 			$CodiceFiscaleAdattato = implode($CodiceFiscaleArray);
+
+            // Controllo che la forma sia corretta
+            if( !preg_match(self::REGEX_CODICEFISCALE, $CodiceFiscaleAdattato) )
+                $this->RaiseException(2);
 			
 			// Estraggo i dati
 			$this->Sesso         = ((int)(substr($CodiceFiscaleAdattato,9,2) > 40) ? self::CHAR_FEMMINA : self::CHAR_MASCHIO);

@@ -16,3 +16,14 @@ if( $cf->ValidaCodiceFiscale('MRARSS75P14H501I') )
 else
     echo 'Codice fiscale non corretto';
 ```
+
+Per inizializzare il progetto:
+```
+composer install
+```
+
+Per eseguire i test unitari:
+```
+./vendor/bin/phpunit
+```
+
