@@ -1,7 +1,8 @@
 <?php
 
-require_once __DIR__ . "/../CodiceFiscale.php";
+require_once __DIR__ . "/../src/CodiceFiscale.php";
 use PHPUnit\Framework\TestCase;
+use NigroSimone\CodiceFiscale;
 
 class CodiceFiscaleTest extends TestCase
 {
