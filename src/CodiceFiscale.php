@@ -4,7 +4,6 @@ namespace NigroSimone;
 /**
  * Classe per la validazione dei Codici fiscali
  * @author SimoneNigro
- *
  */
 class CodiceFiscale
 {
@@ -143,7 +142,7 @@ class CodiceFiscale
 
     /**
      * Lista peso caratteri DISPARI
-     * @var unknown_type
+     * @var array
      */
     private $ListaCaratteriDispari = [
         "0" => 1,
@@ -238,7 +237,7 @@ class CodiceFiscale
 
     /**
      * Lista messaggi di Errore
-     * @var unknown_type
+     * @var array
      */
     private $ListaErrori = [
         0 => "Codice da analizzare assente",
