@@ -1,0 +1,14 @@
+[19-Jan-2022 20:31:23 UTC] PHP Fatal error:  Uncaught Error: Class 'NigroSimone' not found in C:\Users\nigro\OneDrive\Documenti\SVILUPPO\PHP\CodiceFiscale\Esempio.php:11
+Stack trace:
+#0 {main}
+  thrown in C:\Users\nigro\OneDrive\Documenti\SVILUPPO\PHP\CodiceFiscale\Esempio.php on line 11
+[19-Jan-2022 20:32:06 UTC] PHP Warning:  The use statement with non-compound name 'NigroSimone' has no effect in C:\Users\nigro\OneDrive\Documenti\SVILUPPO\PHP\CodiceFiscale\Esempio.php on line 4
+[19-Jan-2022 20:32:06 UTC] PHP Fatal error:  Uncaught Error: Class 'NigroSimone' not found in C:\Users\nigro\OneDrive\Documenti\SVILUPPO\PHP\CodiceFiscale\Esempio.php:13
+Stack trace:
+#0 {main}
+  thrown in C:\Users\nigro\OneDrive\Documenti\SVILUPPO\PHP\CodiceFiscale\Esempio.php on line 13
+[19-Jan-2022 20:32:24 UTC] PHP Warning:  The use statement with non-compound name 'NigroSimone' has no effect in C:\Users\nigro\OneDrive\Documenti\SVILUPPO\PHP\CodiceFiscale\Esempio.php on line 4
+[19-Jan-2022 20:32:24 UTC] PHP Fatal error:  Uncaught Error: Class 'CodiceFiscale' not found in C:\Users\nigro\OneDrive\Documenti\SVILUPPO\PHP\CodiceFiscale\Esempio.php:13
+Stack trace:
+#0 {main}
+  thrown in C:\Users\nigro\OneDrive\Documenti\SVILUPPO\PHP\CodiceFiscale\Esempio.php on line 13

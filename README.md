@@ -3,11 +3,19 @@ CodiceFiscale
 
 Classe PHP per la validazione dei Codici Fiscali italiani a 16 caratteri
 
-Esempio di utilizzo
+## Installazione
+Usa il dependancy mananger [composer] per installare `nigrosimone/codicefiscale`:
+```bash
+composer require nigrosimone/codicefiscale
+```
+
+## Uso
 
 ```php
 <?php
-require 'CodiceFiscale.php';
+require "vendor/autoload.php";
+
+use NigroSimone\CodiceFiscale;
 
 $cf = new CodiceFiscale();
 
@@ -17,17 +25,24 @@ else
     echo 'Codice fiscale non corretto';
 ```
 
-Per inizializzare il progetto:
+## Sviluppo
+
+Clona il progetto:
+```bash
+git clone https://github.com/nigrosimone/CodiceFiscale.git
 ```
+
+Per inizializzare il progetto:
+```bash
 composer install
 ```
 
 Per eseguire i test unitari:
-```
+```bash
 php ./vendor/bin/phpunit
 ```
 
 Per visualizzare l'esempio:
-```
+```bash
 php -S localhost:8000 Esempio.php
 ```

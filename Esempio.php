@@ -1,5 +1,7 @@
 <?php
-require "CodiceFiscale.php";
+require "vendor/autoload.php";
+
+use NigroSimone\CodiceFiscale;
 
 // Codici fiscali di fantasia da validare
 $CodiciDaValidare = [

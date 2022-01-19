@@ -1,4 +1,6 @@
 <?php
+namespace NigroSimone;
+
 /**
  * Classe per la validazione dei Codici fiscali
  * @author SimoneNigro

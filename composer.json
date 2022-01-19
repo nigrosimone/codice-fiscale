@@ -3,12 +3,11 @@
   "type":        "project",
   "description": "Checks for Italian Codice Fiscale",
   "license": "MIT",
-  "autoload": {
-      "psr-4": {
-      }
-  },
   "autoload-dev": {
     "psr-4": { "tests\\": "tests" }
+  },
+  "autoload": {
+    "psr-4": { "NigroSimone\\": "src" }
   },
   "require": {
   },
