@@ -24,6 +24,10 @@ composer install
 
 Per eseguire i test unitari:
 ```
-./vendor/bin/phpunit
+php ./vendor/bin/phpunit
 ```
 
+Per visualizzare l'esempio:
+```
+php -S localhost:8000 Esempio.php
+```
