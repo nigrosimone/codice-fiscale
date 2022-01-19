@@ -1,11 +1,10 @@
 <?php
 
-require_once __DIR__ . '/../CodiceFiscale.php';
+require_once __DIR__ . "/../CodiceFiscale.php";
 use PHPUnit\Framework\TestCase;
 
 class CodiceFiscaleTest extends TestCase
 {
-
     /**
      * @dataProvider goodDataProvider
      */
@@ -13,7 +12,10 @@ class CodiceFiscaleTest extends TestCase
     {
         $chk = new CodiceFiscale();
 
-        self::assertTrue($chk->ValidaCodiceFiscale($goodFiscalCode), $chk->GetErrore() ?? '');
+        self::assertTrue(
+            $chk->ValidaCodiceFiscale($goodFiscalCode),
+            $chk->GetErrore() ?? ""
+        );
     }
 
     /**
@@ -23,44 +25,47 @@ class CodiceFiscaleTest extends TestCase
     {
         $chk = new CodiceFiscale();
 
-        self::assertFalse($chk->ValidaCodiceFiscale($badFiscalCode), $chk->GetErrore() ?? '');
+        self::assertFalse(
+            $chk->ValidaCodiceFiscale($badFiscalCode),
+            $chk->GetErrore() ?? ""
+        );
     }
 
     public function goodDataProvider(): array
     {
         return [
-            ['MRARSS75P14H501I'],
-            ['MRARSS82M56F205J'],
-            ['LRNCST94B08F104C'],
-            ['LRNCST94B08F10QZ'],
-            ['LRNCST94B08F1L4N'],
-            ['LRNCST94B08FM04U'],
-            ['LRNCST94B0UF104Z'],
-            ['LRNCSTV4B08F104R'],
-            ['LRNCST94BL8F1LQV'],
-            ['LRNCSTVQB08F10QA'],
-            ['LRNCSTVQBLUFMLQL'],
-            ['BDLMMD80B13Z33SK'],
+            ["MRARSS75P14H501I"],
+            ["MRARSS82M56F205J"],
+            ["LRNCST94B08F104C"],
+            ["LRNCST94B08F10QZ"],
+            ["LRNCST94B08F1L4N"],
+            ["LRNCST94B08FM04U"],
+            ["LRNCST94B0UF104Z"],
+            ["LRNCSTV4B08F104R"],
+            ["LRNCST94BL8F1LQV"],
+            ["LRNCSTVQB08F10QA"],
+            ["LRNCSTVQBLUFMLQL"],
+            ["BDLMMD80B13Z33SK"],
         ];
     }
 
     public function badDataProvider(): array
     {
         return [
-            ['MRARSS82M56F205I'],
-            ['LRNCST94B08F104Z'],
-            ['LRNCST94B08F104'],
-            ['1RNCST94B08F104Z'],
-            ['XRNCST94B08F104C'],
-            ['LXNCST94B08F10QZ'],
-            ['LRXCST94B08F1L4N'],
-            ['LRNXST94B08FM04U'],
-            ['LRNCXT94B0UF104Z'],
-            ['LRNCSXV4B08F104R'],
-            ['LRNCSTX4BL8F1LQV'],
-            ['LRNCSTVXB08F10QA'],
-            ['LRNCSTVQXLUFMLQL'],
-            ['RNCSTVQXLUFMLQL'],
+            ["MRARSS82M56F205I"],
+            ["LRNCST94B08F104Z"],
+            ["LRNCST94B08F104"],
+            ["1RNCST94B08F104Z"],
+            ["XRNCST94B08F104C"],
+            ["LXNCST94B08F10QZ"],
+            ["LRXCST94B08F1L4N"],
+            ["LRNXST94B08FM04U"],
+            ["LRNCXT94B0UF104Z"],
+            ["LRNCSXV4B08F104R"],
+            ["LRNCSTX4BL8F1LQV"],
+            ["LRNCSTVXB08F10QA"],
+            ["LRNCSTVQXLUFMLQL"],
+            ["RNCSTVQXLUFMLQL"],
         ];
     }
 }
