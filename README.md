@@ -1,4 +1,4 @@
-CodiceFiscale
+Codice Fiscale
 =============
 
 Classe PHP per la validazione dei Codici Fiscali italiani a 16 caratteri
@@ -24,6 +24,8 @@ if( $cf->ValidaCodiceFiscale('MRARSS75P14H501I') )
 else
     echo 'Codice fiscale non corretto';
 ```
+
+Demo [online](https://phpsandbox.io/e/x/h1r2e)
 
 ## Sviluppo
 
