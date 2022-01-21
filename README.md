@@ -39,10 +39,10 @@ composer install
 
 Per eseguire i test unitari:
 ```bash
-php ./vendor/bin/phpunit
+composer test
 ```
 
 Per visualizzare l'esempio:
 ```bash
-php -S localhost:8000 Esempio.php
+composer dev
 ```

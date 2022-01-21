@@ -12,3 +12,6 @@ vendor
 .DS_Store
 
 .phpunit.result.cache
+/.buildpath
+/.project
+/.settings
