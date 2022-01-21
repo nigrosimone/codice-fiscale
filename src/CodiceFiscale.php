@@ -267,7 +267,7 @@ class CodiceFiscale
      * Torna true se il Codice Fiscale è valido
      * @return boolean
      */
-    public function GetIsValido()
+    public function getIsValido()
     {
         return $this->isValido;
     }
@@ -276,7 +276,7 @@ class CodiceFiscale
      * Torna l'ultimo errore se presente
      * @return string
      */
-    public function GetErrore()
+    public function getErrore()
     {
         return $this->errore;
     }
@@ -285,7 +285,7 @@ class CodiceFiscale
      * Torna il sesso del Codice Fiscale
      * @return string
      */
-    public function GetSesso()
+    public function getSesso()
     {
         return $this->sesso;
     }
@@ -294,7 +294,7 @@ class CodiceFiscale
      * Torna il comune di nascita del Codice Fiscale
      * @return integer
      */
-    public function GetComuneNascita()
+    public function getComuneNascita()
     {
         return $this->comuneNascita;
     }
@@ -303,7 +303,7 @@ class CodiceFiscale
      * Torna l'anno di nascita del Codice Fiscale
      * @return integer
      */
-    public function GetAnnoNascita()
+    public function getAnnoNascita()
     {
         return $this->annoNascita;
     }
@@ -312,7 +312,7 @@ class CodiceFiscale
      * Torna il mese di nascita del Codice Fiscale
      * @return integer
      */
-    public function GetMeseNascita()
+    public function getMeseNascita()
     {
         return $this->meseNascita;
     }
@@ -321,7 +321,7 @@ class CodiceFiscale
      * Torna il giorno di nascita del Codice Fiscale
      * @return integer
      */
-    public function GetGiornoNascita()
+    public function getGiornoNascita()
     {
         return $this->giornoNascita;
     }
@@ -331,7 +331,7 @@ class CodiceFiscale
      * @param string $codiceFiscale
      * @return boolean
      */
-    public function ValidaCodiceFiscale($codiceFiscale)
+    public function validaCodiceFiscale($codiceFiscale)
     {
         $this->resettaProprieta();
 

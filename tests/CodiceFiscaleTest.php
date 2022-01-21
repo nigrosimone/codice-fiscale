@@ -14,8 +14,8 @@ class CodiceFiscaleTest extends TestCase
         $chk = new CodiceFiscale();
 
         self::assertTrue(
-            $chk->ValidaCodiceFiscale($goodFiscalCode),
-            $chk->GetErrore() ?? ""
+            $chk->validaCodiceFiscale($goodFiscalCode),
+            $chk->getErrore() ?? ""
         );
     }
 
@@ -27,8 +27,8 @@ class CodiceFiscaleTest extends TestCase
         $chk = new CodiceFiscale();
 
         self::assertFalse(
-            $chk->ValidaCodiceFiscale($badFiscalCode),
-            $chk->GetErrore() ?? ""
+            $chk->validaCodiceFiscale($badFiscalCode),
+            $chk->getErrore() ?? ""
         );
     }
 
