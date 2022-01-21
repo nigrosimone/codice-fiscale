@@ -467,12 +467,12 @@ class CodiceFiscale
      * @throws \Exception
      * @return void
      */
-    private function raiseException($ErrorNum)
+    private function raiseException($errrNumber)
     {
-        $ErrMessage = isset($this->listaErrori[$ErrorNum])
-            ? $this->listaErrori[$ErrorNum]
+        $errMessage = isset($this->listaErrori[$errrNumber])
+            ? $this->listaErrori[$errrNumber]
             : "Eccezione non gestita";
 
-        throw new \Exception($ErrMessage, $ErrorNum);
+        throw new \Exception($errMessage, $errrNumber);
     }
 }
