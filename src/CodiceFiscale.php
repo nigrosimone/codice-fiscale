@@ -272,22 +272,6 @@ class CodiceFiscale
     ];
 
     /**
-     * Costruttore
-     *
-     * @return CodiceFiscale
-     */
-    public function __construct()
-    {}
-
-    /**
-     * Distruttore
-     *
-     * @return void
-     */
-    public function __destruct()
-    {}
-
-    /**
      * Torna true se il Codice Fiscale è valido
      *
      * @return boolean
