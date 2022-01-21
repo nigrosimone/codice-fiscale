@@ -44,6 +44,11 @@ Per eseguire i test unitari:
 composer test
 ```
 
+Per eseguire il lint:
+```bash
+composer phpcs
+```
+
 Per visualizzare l'esempio (`Esempio.php`):
 ```bash
 composer dev
