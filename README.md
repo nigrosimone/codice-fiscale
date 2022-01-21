@@ -44,7 +44,8 @@ Per eseguire i test unitari:
 composer test
 ```
 
-Per visualizzare l'esempio:
+Per visualizzare l'esempio (`Esempio.php`):
 ```bash
 composer dev
 ```
+l'esempio sarà visibile l'indirizzo http://localhost:8000
