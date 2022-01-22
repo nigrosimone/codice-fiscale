@@ -11,7 +11,12 @@ before_script:
  - composer update
  - composer install --prefer-source --no-interaction --dev
  
-script: phpunit --coverage-text
+after_success:
+ - travis_retry php vendor/bin/php-coveralls
+ 
+script:
+ - mkdir -p build/logs
+ - phpunit --coverage-text --coverage-clover build/logs/clover.xml
  
 fast_finish: true
 language: php
