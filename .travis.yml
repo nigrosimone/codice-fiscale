@@ -1,6 +1,10 @@
 language: php
 php:
   - 7.3
+  
+env:
+  global:
+    - XDEBUG_MODE=coverage
 
 before_script:
  - composer self-update
