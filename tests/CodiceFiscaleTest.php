@@ -48,6 +48,9 @@ class CodiceFiscaleTest extends TestCase
     {
         return [
             [
+                "CNTPTR60C29H5L1W"
+            ],
+            [
                 "MRARSS75P14H501I"
             ],
             [
