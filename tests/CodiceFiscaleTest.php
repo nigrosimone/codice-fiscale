@@ -85,6 +85,9 @@ class CodiceFiscaleTest extends TestCase
             ],
             [
                 "BDLMMD80B13Z33SK"
+            ],
+            [
+                "RSSLRA80A41H501X"
             ]
         ];
     }
