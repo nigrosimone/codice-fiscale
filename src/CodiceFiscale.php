@@ -450,9 +450,9 @@ class CodiceFiscale
     }
 
     /**
-     * Alza un eccezione
+     * Alza un'eccezione
      *
-     * @param integer $ErrorNum
+     * @param integer $errorNumber
      * @throws \Exception
      * @return void
      */
