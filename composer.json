@@ -3,6 +3,11 @@
 	"type" : "project",
 	"description" : "Checks for Italian Codice Fiscale",
 	"license" : "MIT",
+	"config": {
+            "platform": {
+                "php": "7.1"
+            }
+        },
 	"autoload-dev" : {
 		"psr-4" : {
 			"tests\\" : "tests"
