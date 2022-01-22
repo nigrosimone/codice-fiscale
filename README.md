@@ -1,7 +1,7 @@
 Codice Fiscale [![Build Status](https://app.travis-ci.com/nigrosimone/CodiceFiscale.svg?branch=master)](https://app.travis-ci.com/nigrosimone/CodiceFiscale) [![Coverage Status](https://coveralls.io/repos/github/nigrosimone/CodiceFiscale/badge.svg?branch=master)](https://coveralls.io/github/nigrosimone/CodiceFiscale?branch=master)
 =============
 
-Classe PHP per la validazione dei Codici Fiscali italiani a 16 caratteri
+Libreria PHP per la validazione dei Codici Fiscali italiani a 16 caratteri con supporto per l'omocodia
 
 ## Installazione
 Usa il dependancy mananger composer per installare `nigrosimone/codicefiscale`:
