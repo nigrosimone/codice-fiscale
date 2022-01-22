@@ -1,7 +1,7 @@
 {
 	"name" : "nigrosimone/codicefiscale",
 	"type" : "project",
-	"description" : "Checks for Italian Codice Fiscale",
+	"description" : "Libreria PHP per la validazione dei Codici Fiscali italiani a 16 caratteri con supporto per l'omocodia",
 	"license" : "MIT",
 	"config": {
             "platform": {
