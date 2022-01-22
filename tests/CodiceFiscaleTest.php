@@ -74,6 +74,12 @@ class CodiceFiscaleTest extends TestCase
     {
         return [
             [
+                ""
+            ],
+            [
+                "MRARSS82M56F205IXXXX"
+            ],
+            [
                 "MRARSS82M56F205I"
             ],
             [
