@@ -19,7 +19,7 @@ use NigroSimone\CodiceFiscale;
 
 $cf = new CodiceFiscale();
 
-if( $cf->ValidaCodiceFiscale('MRARSS75P14H501I') )
+if( $cf->validaCodiceFiscale('MRARSS75P14H501I') )
     echo 'Codice fiscale corretto';
 else
     echo 'Codice fiscale non corretto';
