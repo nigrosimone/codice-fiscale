@@ -1,4 +1,4 @@
-Codice Fiscale
+Codice Fiscale [![Build Status](https://app.travis-ci.com/nigrosimone/CodiceFiscale.svg?branch=master)](https://app.travis-ci.com/nigrosimone/CodiceFiscale)
 =============
 
 Classe PHP per la validazione dei Codici Fiscali italiani a 16 caratteri
