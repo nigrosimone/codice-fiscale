@@ -32,9 +32,9 @@ class CodiceFiscaleTest extends TestCase
     function test_checker_can_detect_badCodes($badFiscalCode)
     {
         $chk = new CodiceFiscale();
-        
+
         self::assertFalse($chk->validaCodiceFiscale($badFiscalCode), $chk->getErrore() ?? "");
-        
+
         self::assertTrue(empty($chk->getGiornoNascita()), 'not empty getGiornoNascita');
         self::assertTrue(empty($chk->getMeseNascita()), 'not empty getMeseNascita');
         self::assertTrue(empty($chk->getAnnoNascita()), 'not empty getAnnoNascita');
@@ -97,6 +97,11 @@ class CodiceFiscaleTest extends TestCase
         return [
             [
                 ""
+            ],
+            [
+                "!NTPTR60C29H5L1W"
+            ],            [
+                "0NTPTR60C29H5L1S"
             ],
             [
                 "MRARSS82M56F205IXXXX"
