@@ -1,4 +1,4 @@
-Codice Fiscale PHP [![Build Status](https://app.travis-ci.com/nigrosimone/CodiceFiscale.svg?branch=master)](https://app.travis-ci.com/nigrosimone/CodiceFiscale) [![Coverage Status](https://coveralls.io/repos/github/nigrosimone/CodiceFiscale/badge.svg?branch=master)](https://coveralls.io/github/nigrosimone/CodiceFiscale?branch=master)
+Codice Fiscale PHP [![Build Status](https://app.travis-ci.com/nigrosimone/codice-fiscale.svg?branch=master)](https://app.travis-ci.com/nigrosimone/codice-fiscale) [![Coverage Status](https://coveralls.io/repos/github/nigrosimone/CodiceFiscale/badge.svg?branch=master)](https://coveralls.io/github/nigrosimone/CodiceFiscale?branch=master)
 =============
 
 Libreria PHP per la validazione dei Codici Fiscali italiani a 16 caratteri con supporto per l'omocodia
