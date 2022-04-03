@@ -47,6 +47,9 @@ class CodiceFiscaleTest extends TestCase
     public function goodDataProvider(): array
     {
         return [
+		    [
+			    "LMRBHM74A01Z3P0U"
+			],
             [
                 "CNTPTR60C29H5L1W"
             ],
