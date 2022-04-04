@@ -7,7 +7,9 @@ use NigroSimone\CodiceFiscale;
 $CodiciDaValidare = [
     "MRARSS75P14H501I",
     "MRARSS82M56F205J",
-    "MRARSS82M56F205I"
+    "MRARSS82M56F205I",
+    "LMRBHM74A01Z3P0U",
+    "DLCFNC01L46H50MJ"
 ];
 
 $cf = new CodiceFiscale();
