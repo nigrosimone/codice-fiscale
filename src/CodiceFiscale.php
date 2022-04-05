@@ -5,6 +5,7 @@ namespace NigroSimone;
  * Classe per la validazione dei Codici fiscali
  *
  * @author SimoneNigro
+ * @link https://github.com/nigrosimone/
  */
 class CodiceFiscale
 {
@@ -35,28 +36,28 @@ class CodiceFiscale
     /**
      * Comune di nascita del codice fiscale
      *
-     * @var integer
+     * @var string
      */
     private $comuneNascita = null;
 
     /**
      * Giorno di nascita del codice fiscale
      *
-     * @var integer
+     * @var string
      */
     private $giornoNascita = null;
 
     /**
      * Mese di nascita del codice fiscale
      *
-     * @var integer
+     * @var string
      */
     private $meseNascita = null;
 
     /**
      * Anno di nascita del codice fiscale
      *
-     * @var integer
+     * @var string
      */
     private $annoNascita = null;
 
@@ -304,7 +305,7 @@ class CodiceFiscale
     /**
      * Torna il comune di nascita del Codice Fiscale
      *
-     * @return integer
+     * @return string
      */
     public function getComuneNascita()
     {
@@ -314,7 +315,7 @@ class CodiceFiscale
     /**
      * Torna l'anno di nascita del Codice Fiscale
      *
-     * @return integer
+     * @return string
      */
     public function getAnnoNascita()
     {
@@ -324,7 +325,7 @@ class CodiceFiscale
     /**
      * Torna il mese di nascita del Codice Fiscale
      *
-     * @return integer
+     * @return string
      */
     public function getMeseNascita()
     {
@@ -334,7 +335,7 @@ class CodiceFiscale
     /**
      * Torna il giorno di nascita del Codice Fiscale
      *
-     * @return integer
+     * @return string
      */
     public function getGiornoNascita()
     {

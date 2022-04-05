@@ -15,12 +15,12 @@ class CodiceFiscaleTest extends TestCase
         $chk = new CodiceFiscale();
 
         self::assertTrue($chk->validaCodiceFiscale($goodFiscalCode), $chk->getErrore() ?? "");
-        
-        self::assertTrue(!empty($chk->getGiornoNascita()), 'empty getGiornoNascita');
-        self::assertTrue(!empty($chk->getMeseNascita()), 'empty getMeseNascita');
-        self::assertTrue(!empty($chk->getAnnoNascita()), 'empty getAnnoNascita');
-        self::assertTrue(!empty($chk->getComuneNascita()), 'empty getComuneNascita');
-        self::assertTrue(!empty($chk->getSesso()), 'empty getSesso');
+
+        self::assertTrue(! empty($chk->getGiornoNascita()), 'empty getGiornoNascita');
+        self::assertTrue(! empty($chk->getMeseNascita()), 'empty getMeseNascita');
+        self::assertTrue(! empty($chk->getAnnoNascita()), 'empty getAnnoNascita');
+        self::assertTrue(! empty($chk->getComuneNascita()), 'empty getComuneNascita');
+        self::assertTrue(! empty($chk->getSesso()), 'empty getSesso');
         self::assertTrue(empty($chk->getErrore()), 'not empty getErrore');
         self::assertTrue($chk->getIsValido(), 'getIsValido');
     }
@@ -40,8 +40,8 @@ class CodiceFiscaleTest extends TestCase
         self::assertTrue(empty($chk->getAnnoNascita()), 'not empty getAnnoNascita');
         self::assertTrue(empty($chk->getComuneNascita()), 'not empty getComuneNascita');
         self::assertTrue(empty($chk->getSesso()), 'not empty getSesso');
-        self::assertTrue(!empty($chk->getErrore()), 'empty getErrore');
-        self::assertTrue(!$chk->getIsValido(), 'getIsValido');
+        self::assertTrue(! empty($chk->getErrore()), 'empty getErrore');
+        self::assertTrue(! $chk->getIsValido(), 'getIsValido');
     }
 
     public function goodDataProvider(): array
@@ -50,9 +50,9 @@ class CodiceFiscaleTest extends TestCase
             [
                 "DLCFNC01L46H50MJ"
             ],
-		    [
-			    "LMRBHM74A01Z3P0U"
-			],
+            [
+                "LMRBHM74A01Z3P0U"
+            ],
             [
                 "CNTPTR60C29H5L1W"
             ],
@@ -106,7 +106,8 @@ class CodiceFiscaleTest extends TestCase
             ],
             [
                 "!NTPTR60C29H5L1W"
-            ],            [
+            ],
+            [
                 "0NTPTR60C29H5L1S"
             ],
             [
