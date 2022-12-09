@@ -8,6 +8,7 @@ Usa il dependancy mananger composer per installare `nigrosimone/codicefiscale`:
 ```bash
 composer require nigrosimone/codicefiscale
 ```
+Oppure scarica direttamente il sorgente [CodiceFiscale.php](https://github.com/nigrosimone/codice-fiscale/blob/master/src/CodiceFiscale.php)
 
 ## Uso
 
