@@ -370,9 +370,10 @@ class CodiceFiscale
             $codiceFiscaleArray = str_split($codiceFiscale);
 
             // Verifica la correttezza delle alterazioni per omocodia
-            for ($i = 0; $i < count($this->listaSostOmocodia); $i ++) {
-                if (! is_numeric($codiceFiscaleArray[$this->listaSostOmocodia[$i]])) {
-                    if ($this->listaDecOmocodia[$codiceFiscaleArray[$this->listaSostOmocodia[$i]]] === "!") {
+            for ($i = 0, $e = count($this->listaSostOmocodia); $i < $e; $i ++) {
+                $x = $codiceFiscaleArray[$this->listaSostOmocodia[$i]];
+                if (! is_numeric($x)) {
+                    if ($this->listaDecOmocodia[$x] === "!") {
                         $this->raiseException(3);
                     }
                 }
@@ -393,7 +394,7 @@ class CodiceFiscale
             }
 
             // Sostituzione per risolvere eventuali omocodie
-            for ($i = 0; $i < count($this->listaSostOmocodia); $i ++) {
+            for ($i = 0, $e = count($this->listaSostOmocodia); $i < $e; $i ++) {
                 if (! is_numeric($codiceFiscaleArray[$this->listaSostOmocodia[$i]])) {
                     $codiceFiscaleArray[$this->listaSostOmocodia[$i]] = $this->listaDecOmocodia[$codiceFiscaleArray[$this->listaSostOmocodia[$i]]];
                 }
