@@ -395,8 +395,9 @@ class CodiceFiscale
 
             // Sostituzione per risolvere eventuali omocodie
             for ($i = 0, $e = count($this->listaSostOmocodia); $i < $e; $i ++) {
-                if (! is_numeric($codiceFiscaleArray[$this->listaSostOmocodia[$i]])) {
-                    $codiceFiscaleArray[$this->listaSostOmocodia[$i]] = $this->listaDecOmocodia[$codiceFiscaleArray[$this->listaSostOmocodia[$i]]];
+                $x = $this->listaSostOmocodia[$i];
+                if (! is_numeric($codiceFiscaleArray[$x])) {
+                    $codiceFiscaleArray[$x] = $this->listaDecOmocodia[$codiceFiscaleArray[$x]];
                 }
             }
 
