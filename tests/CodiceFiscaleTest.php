@@ -194,7 +194,7 @@ class CodiceFiscaleTest extends TestCase
     {
         $cf = new CodiceFiscale();
 
-        $this->assertTrue($cf->validaCodiceFiscale($codiceFiscale), $codiceFiscale . " " . $cf->getErrore());
+        $this->assertEquals($cf->validaCodiceFiscale($codiceFiscale), $expected['valid'], $codiceFiscale . " " . $cf->getErrore());
 
         $this->assertEquals($expected['sesso'], $cf->getSesso(), "Sesso errato per $codiceFiscale");
         $this->assertEquals($expected['comuneNascita'], $cf->getComuneNascita(), "Comune nascita errato per $codiceFiscale");
@@ -213,7 +213,8 @@ class CodiceFiscaleTest extends TestCase
                     'comuneNascita' => 'F205',
                     'annoNascita' => '83',
                     'meseNascita' => '02',
-                    'giornoNascita' => '01'
+                    'giornoNascita' => '01',
+                    'valid' => true
                 ]
             ],
             [
@@ -223,7 +224,19 @@ class CodiceFiscaleTest extends TestCase
                     'comuneNascita' => 'F205',
                     'annoNascita' => '83',
                     'meseNascita' => '02',
-                    'giornoNascita' => '01'
+                    'giornoNascita' => '01',
+                    'valid' => true
+                ]
+            ],
+            [
+                "!RARSS83B41F205C",
+                [
+                    'sesso' => null,
+                    'comuneNascita' => null,
+                    'annoNascita' => null,
+                    'meseNascita' => null,
+                    'giornoNascita' => null,
+                    'valid' => false
                 ]
             ]
         ];
