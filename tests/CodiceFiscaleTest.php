@@ -29,6 +29,12 @@ class CodiceFiscaleTest extends TestCase
         self::assertTrue(is_string($chk->getComuneNascita()), 'is_string getComuneNascita');
         self::assertTrue(is_string($chk->getSesso()), 'is_string getSesso');
 
+        self::assertTrue(strlen($chk->getGiornoNascita()) === 2, 'strlen getGiornoNascita');
+        self::assertTrue(strlen($chk->getMeseNascita()) === 2, 'strlen getMeseNascita');
+        self::assertTrue(strlen($chk->getAnnoNascita()) === 2, 'strlen getAnnoNascita');
+        self::assertTrue(strlen($chk->getComuneNascita()) === 4, 'strlen getComuneNascita');
+        self::assertTrue(strlen($chk->getSesso()) === 1, 'strlen getSesso');
+
         self::assertTrue($chk->getIsValido(), 'getIsValido');
     }
 
