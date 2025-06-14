@@ -186,4 +186,36 @@ class CodiceFiscaleTest extends TestCase
             ]
         ];
     }
+
+    /**
+     * @dataProvider parsingDataProvider
+     */
+    public function test_parsing_codice_fiscale($codiceFiscale, $expected)
+    {
+        $cf = new CodiceFiscale();
+
+        $this->assertTrue($cf->validaCodiceFiscale($codiceFiscale), $codiceFiscale ." ". $cf->getErrore());
+
+        $this->assertEquals($expected['sesso'], $cf->getSesso(), "Sesso errato per $codiceFiscale");
+        $this->assertEquals($expected['comuneNascita'], $cf->getComuneNascita(), "Comune nascita errato per $codiceFiscale");
+        $this->assertEquals($expected['annoNascita'], $cf->getAnnoNascita(), "Anno nascita errato per $codiceFiscale");
+        $this->assertEquals($expected['meseNascita'], $cf->getMeseNascita(), "Mese nascita errato per $codiceFiscale");
+        $this->assertEquals($expected['giornoNascita'], $cf->getGiornoNascita(), "Giorno nascita errato per $codiceFiscale");
+    }
+
+    public function parsingDataProvider()
+    {
+        return [
+            [
+                "MRARSS83B01F205Y",
+                [
+                    'sesso' => 'M',
+                    'comuneNascita' => 'F205',
+                    'annoNascita' => '83',
+                    'meseNascita' => '02',
+                    'giornoNascita' => '01'
+                ]
+            ]
+        ];
+    }
 }
