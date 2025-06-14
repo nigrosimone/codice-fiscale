@@ -418,7 +418,7 @@ class CodiceFiscale
 
             // Recupero giorno di nascita se Sesso=F
             if ($this->sesso == self::CHAR_FEMMINA) {
-                $this->giornoNascita = $this->giornoNascita - 40;
+                $this->giornoNascita = (string)($this->giornoNascita - 40);
 
                 if (strlen($this->giornoNascita) === 1) {
                     $this->giornoNascita = "0" . $this->giornoNascita;
