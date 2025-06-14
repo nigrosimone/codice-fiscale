@@ -14,6 +14,14 @@ class CodiceFiscaleTest extends TestCase
     {
         $chk = new CodiceFiscale();
 
+        self::assertTrue(empty($chk->getGiornoNascita()), 'empty getGiornoNascita');
+        self::assertTrue(empty($chk->getMeseNascita()), 'empty getMeseNascita');
+        self::assertTrue(empty($chk->getAnnoNascita()), 'empty getAnnoNascita');
+        self::assertTrue(empty($chk->getComuneNascita()), 'empty getComuneNascita');
+        self::assertTrue(empty($chk->getSesso()), 'empty getSesso');
+        self::assertTrue(empty($chk->getErrore()), 'not empty getErrore');
+        self::assertFalse($chk->getIsValido(), 'getIsValido');
+
         self::assertTrue($chk->validaCodiceFiscale($goodFiscalCode), $chk->getErrore() ?? "");
 
         self::assertFalse(empty($chk->getGiornoNascita()), 'empty getGiornoNascita');
@@ -45,6 +53,14 @@ class CodiceFiscaleTest extends TestCase
     function test_checker_can_detect_badCodes($badFiscalCode)
     {
         $chk = new CodiceFiscale();
+
+        self::assertTrue(empty($chk->getGiornoNascita()), 'empty getGiornoNascita');
+        self::assertTrue(empty($chk->getMeseNascita()), 'empty getMeseNascita');
+        self::assertTrue(empty($chk->getAnnoNascita()), 'empty getAnnoNascita');
+        self::assertTrue(empty($chk->getComuneNascita()), 'empty getComuneNascita');
+        self::assertTrue(empty($chk->getSesso()), 'empty getSesso');
+        self::assertTrue(empty($chk->getErrore()), 'not empty getErrore');
+        self::assertFalse($chk->getIsValido(), 'getIsValido');
 
         self::assertFalse($chk->validaCodiceFiscale($badFiscalCode), $chk->getErrore() ?? "");
 
