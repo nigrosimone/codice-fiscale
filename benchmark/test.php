@@ -23,7 +23,7 @@ $sampleCodes = [
 ];
 
 $codes = [];
-for ($i = 0; $i < 100000; $i++) {
+for ($i = 0; $i < 1000000; $i++) {
     $codes[] = $sampleCodes[$i % count($sampleCodes)];
 }
 
@@ -44,4 +44,7 @@ $duration = $end - $start;
 echo "Validated " . count($codes) . " codes in {$duration} seconds.\n";
 echo "Valid codes: {$validCount}\n";
 
-// latest Validated 100000 codes in 0.3336079120636 seconds.
+/*
+Validated 1000000 codes in 3.4089179039001 seconds.
+Valid codes: 1000000
+*/
