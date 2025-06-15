@@ -13,7 +13,7 @@ class CodiceFiscale
 {
 
     // Espressione regolare per il controllo formale del codice fiscale
-    const REGEX_CODICEFISCALE = '/^[a-z]{6}[0-9]{2}[a-z][0-9]{2}[a-z][0-9]{3}[a-z]$/i';
+    const REGEX_CODICEFISCALE = '/^[A-Z]{6}[0-9]{2}[A-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$/';
 
     // Carattere utilizzato per le donne
     const CHAR_FEMMINA = "F";
@@ -412,10 +412,10 @@ class CodiceFiscale
             }
 
             // Estraggo i dati
-            $this->sesso = ((int) substr($codiceFiscaleAdattato, 9, 2) > 40) ? self::CHAR_FEMMINA : self::CHAR_MASCHIO;
+            $this->giornoNascita = substr($codiceFiscaleAdattato, 9, 2);
+            $this->sesso = ((int) $this->giornoNascita > 40) ? self::CHAR_FEMMINA : self::CHAR_MASCHIO;
             $this->comuneNascita = substr($codiceFiscaleAdattato, 11, 4);
             $this->annoNascita = substr($codiceFiscaleAdattato, 6, 2);
-            $this->giornoNascita = substr($codiceFiscaleAdattato, 9, 2);
             $this->meseNascita = $this->listaDecMesi[substr($codiceFiscaleAdattato, 8, 1)];
 
             // Recupero giorno di nascita se Sesso=F

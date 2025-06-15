@@ -45,6 +45,6 @@ echo "Validated " . count($codes) . " codes in {$duration} seconds.\n";
 echo "Valid codes: {$validCount}\n";
 
 /*
-Validated 1000000 codes in 3.4089179039001 seconds.
+Validated 1000000 codes in 3.334499835968 seconds
 Valid codes: 1000000
 */
