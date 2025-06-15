@@ -26,7 +26,9 @@
 	"scripts" : {
 		"test" : "php ./vendor/bin/phpunit",
 		"dev" : "php -S localhost:8000 Esempio.php",
-		"phpcs" : "php vendor/bin/phpcs --standard=psr2 src/ -n"
+		"phpcs" : "php vendor/bin/phpcs --standard=psr2 src/ -n",
+		"bench" : "php ./benchmark/test.php"
+
 	},
 	"homepage" : "https://github.com/nigrosimone/CodiceFiscale",
 	"authors" : [{
