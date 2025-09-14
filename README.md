@@ -1,7 +1,7 @@
 Codice Fiscale PHP [![Build Status](https://app.travis-ci.com/nigrosimone/codice-fiscale.svg?branch=master)](https://app.travis-ci.com/nigrosimone/codice-fiscale) [![Coverage Status](https://coveralls.io/repos/github/nigrosimone/CodiceFiscale/badge.svg?branch=master)](https://coveralls.io/github/nigrosimone/CodiceFiscale?branch=master)
 =============
 
-Libreria PHP per la validazione dei Codici Fiscali italiani a 16 caratteri con supporto per l'omocodia. Leggera (solo 10 KB) e veloce (1'000'000 di codici fiscale validatin in 3 secondi).
+Libreria PHP per la validazione dei Codici Fiscali italiani a 16 caratteri con supporto per l'omocodia. Leggera (solo 10 KB) e veloce (1'000'000 di codici fiscali validati in 3 secondi).
 
 ## Installazione
 Usa il dependancy mananger composer per installare `nigrosimone/codicefiscale`:
