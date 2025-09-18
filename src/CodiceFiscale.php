@@ -289,7 +289,7 @@ class CodiceFiscale
      *
      * @return {null|string}
      */
-    public function getErrore(): ?string     
+    public function getErrore(): ?string
     {
         return $this->errore;
     }
