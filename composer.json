@@ -43,7 +43,7 @@
 		"source" : "https://github.com/nigrosimone/CodiceFiscale"
 	},
 	"keywords" : [
-		"codice fiscale php"
+		"codice fiscale", "omocodia", "php"
 	],
 	"repositories" : [{
 			"type" : "git",
