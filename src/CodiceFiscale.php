@@ -13,13 +13,13 @@ class CodiceFiscale
 {
 
     // Espressione regolare per il controllo formale del codice fiscale
-    const REGEX_CODICEFISCALE = '/^[A-Z]{6}[0-9]{2}[A-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$/';
+    private const REGEX_CODICEFISCALE = '/^[A-Z]{6}[0-9]{2}[A-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$/';
 
     // Carattere utilizzato per le donne
-    const CHAR_FEMMINA = "F";
+    private const CHAR_FEMMINA = "F";
 
     // Carattere utilizzato per gli uomini
-    const CHAR_MASCHIO = "M";
+    private const CHAR_MASCHIO = "M";
 
     /**
      * Validità del codice fiscale
@@ -387,8 +387,8 @@ class CodiceFiscale
 
             // Giro sui primi 14 elementi a passo due
             for ($i = 0; $i < 13; $i += 2) {
-                $dispari = $dispari + $this->listaCaratteriDispari[$codiceFiscaleArray[$i]];
-                $pari = $pari + $this->listaCaratteriPari[$codiceFiscaleArray[$i + 1]];
+                $dispari += $this->listaCaratteriDispari[$codiceFiscaleArray[$i]];
+                $pari += $this->listaCaratteriPari[$codiceFiscaleArray[$i + 1]];
             }
 
             // Verifica congruenza dei valori calcolati sui primi 15 caratteri, con il codice di controllo (carattere 16)
