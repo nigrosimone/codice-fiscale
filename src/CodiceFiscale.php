@@ -74,6 +74,7 @@ class CodiceFiscale
      * Lista sostituzioni per omocodia
      *
      * @var array
+     * @readonly
      */
     private array $listaDecOmocodia = [
         "A" => "!",
@@ -108,6 +109,7 @@ class CodiceFiscale
      * Posizioni caratteri interessati ad alterazione di codifica in caso di omocodia
      *
      * @var array
+     * @readonly
      */
     private array $listaSostOmocodia = [
         6,
@@ -123,6 +125,7 @@ class CodiceFiscale
      * Lista peso caratteri PARI
      *
      * @var array
+     * @readonly
      */
     private array $listaCaratteriPari = [
         "0" => 0,
@@ -167,6 +170,7 @@ class CodiceFiscale
      * Lista peso caratteri DISPARI
      *
      * @var array
+     * @readonly
      */
     private array $listaCaratteriDispari = [
         "0" => 1,
@@ -211,6 +215,7 @@ class CodiceFiscale
      * Lista calcolo codice CONTROLLO (carattere 16)
      *
      * @var array
+     * @readonly
      */
     private array $listaCodiceControllo = [
         0 => "A",
@@ -245,6 +250,7 @@ class CodiceFiscale
      * Array per il calcolo del mese
      *
      * @var array
+     * @readonly
      */
     private array $listaDecMesi = [
         "A" => "01",
@@ -265,6 +271,7 @@ class CodiceFiscale
      * Lista messaggi di Errore
      *
      * @var array
+     * @readonly
      */
     private array $listaErrori = [
         0 => "Codice da analizzare assente",
@@ -377,7 +384,7 @@ class CodiceFiscale
                 $x = $codiceFiscaleArray[$this->listaSostOmocodia[$i]];
                 if (!is_numeric($x)) {
                     if ($this->listaDecOmocodia[$x] === "!") {
-                        $this->raiseException(3);
+                        $this->raiseException(errorNumber: 3);
                     }
                 }
             }
