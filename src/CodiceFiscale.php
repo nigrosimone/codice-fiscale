@@ -208,7 +208,7 @@ class CodiceFiscale
     ];
 
     /**
-     * Lista calcolo codice CONTOLLO (carattere 16)
+     * Lista calcolo codice CONTROLLO (carattere 16)
      *
      * @var array
      */
@@ -429,7 +429,7 @@ class CodiceFiscale
                 }
             }
 
-            // Controlli teminati
+            // Controlli terminati
             $this->isValido = true;
             $this->errore = null;
         } catch (\Exception $e) {
