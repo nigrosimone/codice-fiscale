@@ -8,4 +8,11 @@
             <directory>tests</directory>
         </testsuite>
     </testsuites>
+    <!-- Senza questa sezione PHPUnit 9 emette "No filter is configured, code coverage
+         will not be processed" e non scrive alcun report, nemmeno con un driver attivo -->
+    <coverage>
+        <include>
+            <directory suffix=".php">src</directory>
+        </include>
+    </coverage>
 </phpunit>
