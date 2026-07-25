@@ -5,9 +5,12 @@
 	"license" : "MIT",
 	"config": {
             "platform": {
-                "php": "7.3"
+                "php": "7.4"
             }
         },
+	"require" : {
+		"php" : ">=7.4"
+	},
 	"autoload-dev" : {
 		"psr-4" : {
 			"tests\\" : "tests"
