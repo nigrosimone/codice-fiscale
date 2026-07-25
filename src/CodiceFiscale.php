@@ -12,8 +12,20 @@ namespace NigroSimone;
 class CodiceFiscale
 {
 
-    // Espressione regolare per il controllo formale del codice fiscale
-    private const REGEX_CODICEFISCALE = '/^[A-Z]{6}[0-9]{2}[A-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$/';
+    /**
+     * Espressione regolare per il controllo formale del codice fiscale.
+     *
+     * Le posizioni numeriche (anno, giorno e le ultime tre cifre del comune) accettano
+     * anche le lettere previste dall'alterazione per omocodia (L, M, N, P, Q, R, S, T, U, V),
+     * mentre il mese e' limitato alle dodici lettere effettivamente in uso.
+     * Il controllo viene eseguito PRIMA di ogni accesso alle tabelle di decodifica,
+     * in modo che nessun carattere estraneo possa raggiungerle.
+     */
+    private const REGEX_CODICEFISCALE =
+        '/^[A-Z]{6}[0-9LMNPQRSTUV]{2}[ABCDEHLMPRST][0-9LMNPQRSTUV]{2}[A-Z][0-9LMNPQRSTUV]{3}[A-Z]$/';
+
+    // Lunghezza del codice fiscale
+    private const LUNGHEZZA_CODICEFISCALE = 16;
 
     // Carattere utilizzato per le donne
     private const CHAR_FEMMINA = "F";
@@ -21,97 +33,32 @@ class CodiceFiscale
     // Carattere utilizzato per gli uomini
     private const CHAR_MASCHIO = "M";
 
-    /**
-     * Validità del codice fiscale
-     *
-     * @var bool
-     */
-    private bool $isValido = false;
+    // Valore sommato al giorno di nascita per i codici fiscali femminili
+    private const OFFSET_FEMMINA = 40;
 
     /**
-     * Sesso del codice fiscale
+     * Lista sostituzioni per omocodia.
      *
-     * @var string
+     * Contiene le sole lettere ammesse: le cifre e i caratteri non validi sono gia'
+     * stati esclusi dal controllo formale, quindi un isset() basta a distinguerle.
      */
-    private ?string $sesso = null;
-
-    /**
-     * Comune di nascita del codice fiscale
-     *
-     * @var string
-     */
-    private ?string $comuneNascita = null;
-
-    /**
-     * Giorno di nascita del codice fiscale
-     *
-     * @var string
-     */
-    private ?string $giornoNascita = null;
-
-    /**
-     * Mese di nascita del codice fiscale
-     *
-     * @var string
-     */
-    private ?string $meseNascita = null;
-
-    /**
-     * Anno di nascita del codice fiscale
-     *
-     * @var string
-     */
-    private ?string $annoNascita = null;
-
-    /**
-     * Primo errore generato nel processo di validazione
-     *
-     * @var string
-     */
-    private ?string $errore = null;
-
-    /**
-     * Lista sostituzioni per omocodia
-     *
-     * @var array
-     * @readonly
-     */
-    private array $listaDecOmocodia = [
-        "A" => "!",
-        "B" => "!",
-        "C" => "!",
-        "D" => "!",
-        "E" => "!",
-        "F" => "!",
-        "G" => "!",
-        "H" => "!",
-        "I" => "!",
-        "J" => "!",
-        "K" => "!",
+    private const LISTA_DEC_OMOCODIA = [
         "L" => "0",
         "M" => "1",
         "N" => "2",
-        "O" => "!",
         "P" => "3",
         "Q" => "4",
         "R" => "5",
         "S" => "6",
         "T" => "7",
         "U" => "8",
-        "V" => "9",
-        "W" => "!",
-        "X" => "!",
-        "Y" => "!",
-        "Z" => "!"
+        "V" => "9"
     ];
 
     /**
      * Posizioni caratteri interessati ad alterazione di codifica in caso di omocodia
-     *
-     * @var array
-     * @readonly
      */
-    private array $listaSostOmocodia = [
+    private const LISTA_SOST_OMOCODIA = [
         6,
         7,
         9,
@@ -123,11 +70,8 @@ class CodiceFiscale
 
     /**
      * Lista peso caratteri PARI
-     *
-     * @var array
-     * @readonly
      */
-    private array $listaCaratteriPari = [
+    private const LISTA_CARATTERI_PARI = [
         "0" => 0,
         "1" => 1,
         "2" => 2,
@@ -168,11 +112,8 @@ class CodiceFiscale
 
     /**
      * Lista peso caratteri DISPARI
-     *
-     * @var array
-     * @readonly
      */
-    private array $listaCaratteriDispari = [
+    private const LISTA_CARATTERI_DISPARI = [
         "0" => 1,
         "1" => 0,
         "2" => 5,
@@ -212,47 +153,14 @@ class CodiceFiscale
     ];
 
     /**
-     * Lista calcolo codice CONTROLLO (carattere 16)
-     *
-     * @var array
-     * @readonly
+     * Lista calcolo codice CONTROLLO (carattere 16): l'indice e' il resto della divisione per 26
      */
-    private array $listaCodiceControllo = [
-        0 => "A",
-        1 => "B",
-        2 => "C",
-        3 => "D",
-        4 => "E",
-        5 => "F",
-        6 => "G",
-        7 => "H",
-        8 => "I",
-        9 => "J",
-        10 => "K",
-        11 => "L",
-        12 => "M",
-        13 => "N",
-        14 => "O",
-        15 => "P",
-        16 => "Q",
-        17 => "R",
-        18 => "S",
-        19 => "T",
-        20 => "U",
-        21 => "V",
-        22 => "W",
-        23 => "X",
-        24 => "Y",
-        25 => "Z"
-    ];
+    private const LISTA_CODICE_CONTROLLO = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     /**
      * Array per il calcolo del mese
-     *
-     * @var array
-     * @readonly
      */
-    private array $listaDecMesi = [
+    private const LISTA_DEC_MESI = [
         "A" => "01",
         "B" => "02",
         "C" => "03",
@@ -268,18 +176,86 @@ class CodiceFiscale
     ];
 
     /**
-     * Lista messaggi di Errore
+     * Numero massimo di giorni per ogni mese.
      *
-     * @var array
-     * @readonly
+     * Febbraio ammette il 29 perche' l'anno di nascita e' espresso su due cifre e
+     * il secolo non e' determinabile, quindi la bisestilita' non e' verificabile.
      */
-    private array $listaErrori = [
+    private const LISTA_GIORNI_MESE = [
+        "01" => 31,
+        "02" => 29,
+        "03" => 31,
+        "04" => 30,
+        "05" => 31,
+        "06" => 30,
+        "07" => 31,
+        "08" => 31,
+        "09" => 30,
+        "10" => 31,
+        "11" => 30,
+        "12" => 31
+    ];
+
+    /**
+     * Lista messaggi di Errore
+     */
+    private const LISTA_ERRORI = [
         0 => "Codice da analizzare assente",
         1 => "Lunghezza codice da analizzare non corretta",
         2 => "Il codice da analizzare contiene caratteri non corretti",
         3 => "Carattere non valido in decodifica omocodia",
-        4 => "Codice fiscale non corretto"
+        4 => "Codice fiscale non corretto",
+        5 => "Data di nascita non valida"
     ];
+
+    /**
+     * Validità del codice fiscale
+     *
+     * @var bool
+     */
+    private bool $isValido = false;
+
+    /**
+     * Sesso del codice fiscale
+     *
+     * @var string|null
+     */
+    private ?string $sesso = null;
+
+    /**
+     * Comune di nascita del codice fiscale
+     *
+     * @var string|null
+     */
+    private ?string $comuneNascita = null;
+
+    /**
+     * Giorno di nascita del codice fiscale
+     *
+     * @var string|null
+     */
+    private ?string $giornoNascita = null;
+
+    /**
+     * Mese di nascita del codice fiscale
+     *
+     * @var string|null
+     */
+    private ?string $meseNascita = null;
+
+    /**
+     * Anno di nascita del codice fiscale
+     *
+     * @var string|null
+     */
+    private ?string $annoNascita = null;
+
+    /**
+     * Primo errore generato nel processo di validazione
+     *
+     * @var string|null
+     */
+    private ?string $errore = null;
 
     /**
      * Torna true se il Codice Fiscale è valido
@@ -294,7 +270,7 @@ class CodiceFiscale
     /**
      * Torna l'ultimo errore se presente
      *
-     * @return {null|string}
+     * @return string|null
      */
     public function getErrore(): ?string
     {
@@ -304,7 +280,7 @@ class CodiceFiscale
     /**
      * Torna il sesso del Codice Fiscale
      *
-     * @return {null|string}
+     * @return string|null
      */
     public function getSesso(): ?string
     {
@@ -314,7 +290,7 @@ class CodiceFiscale
     /**
      * Torna il comune di nascita del Codice Fiscale
      *
-     * @return {null|string}
+     * @return string|null
      */
     public function getComuneNascita(): ?string
     {
@@ -324,7 +300,7 @@ class CodiceFiscale
     /**
      * Torna l'anno di nascita del Codice Fiscale
      *
-     * @return {null|string}
+     * @return string|null
      */
     public function getAnnoNascita(): ?string
     {
@@ -334,7 +310,7 @@ class CodiceFiscale
     /**
      * Torna il mese di nascita del Codice Fiscale
      *
-     * @return {null|string}
+     * @return string|null
      */
     public function getMeseNascita(): ?string
     {
@@ -344,7 +320,7 @@ class CodiceFiscale
     /**
      * Torna il giorno di nascita del Codice Fiscale
      *
-     * @return {null|string}
+     * @return string|null
      */
     public function getGiornoNascita(): ?string
     {
@@ -361,90 +337,75 @@ class CodiceFiscale
     {
         $this->resettaProprieta();
 
-        try {
-            // Verifico che il Codice Fiscale sia valorizzato
-            if (empty($codiceFiscale)) {
-                $this->raiseException(0);
-            }
-
-            // Verifico che la lunghezza sia almeno di 16 caratteri
-            if (strlen($codiceFiscale) !== 16) {
-                $this->raiseException(1);
-            }
-
-            // Converto in maiuscolo
-            $codiceFiscale = strtoupper($codiceFiscale);
-
-            // Converto la stringa in array
-            $codiceFiscaleArray = str_split($codiceFiscale);
-
-            // Verifica la correttezza delle alterazioni per omocodia
-            $countListOmocodia = count($this->listaSostOmocodia);
-            for ($i = 0; $i < $countListOmocodia; $i++) {
-                $x = $codiceFiscaleArray[$this->listaSostOmocodia[$i]];
-                if (!is_numeric($x)) {
-                    if ($this->listaDecOmocodia[$x] === "!") {
-                        $this->raiseException(errorNumber: 3);
-                    }
-                }
-            }
-
-            $pari = 0;
-            $dispari = $this->listaCaratteriDispari[$codiceFiscaleArray[14]];
-
-            // Giro sui primi 14 elementi a passo due
-            for ($i = 0; $i < 13; $i += 2) {
-                $dispari += $this->listaCaratteriDispari[$codiceFiscaleArray[$i]];
-                $pari += $this->listaCaratteriPari[$codiceFiscaleArray[$i + 1]];
-            }
-
-            // Verifica congruenza dei valori calcolati sui primi 15 caratteri, con il codice di controllo (carattere 16)
-            if (!($this->listaCodiceControllo[($pari + $dispari) % 26] === $codiceFiscaleArray[15])) {
-                $this->raiseException(4);
-            }
-
-            // Sostituzione per risolvere eventuali omocodie
-            for ($i = 0; $i < $countListOmocodia; $i++) {
-                $x = $this->listaSostOmocodia[$i];
-                $char = $codiceFiscaleArray[$x];
-                if (!is_numeric($char)) {
-                    $codiceFiscaleArray[$x] = $this->listaDecOmocodia[$char];
-                }
-            }
-
-            // Converto l'array in stringa
-            $codiceFiscaleAdattato = implode($codiceFiscaleArray);
-
-            // Controllo che la forma sia corretta
-            if (!preg_match(self::REGEX_CODICEFISCALE, $codiceFiscaleAdattato)) {
-                $this->raiseException(2);
-            }
-
-            // Estraggo i dati
-            $this->giornoNascita = substr($codiceFiscaleAdattato, 9, 2);
-            $this->sesso = ((int) $this->giornoNascita > 40) ? self::CHAR_FEMMINA : self::CHAR_MASCHIO;
-            $this->comuneNascita = substr($codiceFiscaleAdattato, 11, 4);
-            $this->annoNascita = substr($codiceFiscaleAdattato, 6, 2);
-            $this->meseNascita = $this->listaDecMesi[substr($codiceFiscaleAdattato, 8, 1)];
-
-            // Recupero giorno di nascita se Sesso=F
-            if ($this->sesso == self::CHAR_FEMMINA) {
-                $this->giornoNascita = (string) ($this->giornoNascita - 40);
-
-                if (strlen($this->giornoNascita) === 1) {
-                    $this->giornoNascita = "0" . $this->giornoNascita;
-                }
-            }
-
-            // Controlli terminati
-            $this->isValido = true;
-            $this->errore = null;
-        } catch (\Exception $e) {
-            $this->errore = $e->getMessage();
-            $this->isValido = false;
+        // Verifico che il Codice Fiscale sia valorizzato
+        if ($codiceFiscale === "") {
+            return $this->impostaErrore(0);
         }
 
-        return $this->isValido;
+        // Verifico che la lunghezza sia esattamente di 16 caratteri
+        if (\strlen($codiceFiscale) !== self::LUNGHEZZA_CODICEFISCALE) {
+            return $this->impostaErrore(1);
+        }
+
+        // Converto in maiuscolo
+        $codiceFiscale = \strtoupper($codiceFiscale);
+
+        // Controllo che la forma sia corretta: da qui in poi ogni carattere è garantito
+        // essere una chiave valida delle tabelle di decodifica
+        if (!\preg_match(self::REGEX_CODICEFISCALE, $codiceFiscale)) {
+            return $this->impostaErrore(2);
+        }
+
+        // Somma dei pesi dei primi 15 caratteri, calcolata sul codice NON normalizzato
+        // perché il carattere di controllo è calcolato sulla forma omocodica
+        $somma = self::LISTA_CARATTERI_DISPARI[$codiceFiscale[14]];
+
+        // Giro sui primi 14 elementi a passo due
+        for ($i = 0; $i < 13; $i += 2) {
+            $somma += self::LISTA_CARATTERI_DISPARI[$codiceFiscale[$i]]
+                + self::LISTA_CARATTERI_PARI[$codiceFiscale[$i + 1]];
+        }
+
+        // Verifica congruenza dei valori calcolati sui primi 15 caratteri, con il codice di controllo (carattere 16)
+        if (self::LISTA_CODICE_CONTROLLO[$somma % 26] !== $codiceFiscale[15]) {
+            return $this->impostaErrore(4);
+        }
+
+        // Sostituzione per risolvere eventuali omocodie
+        $codiceFiscaleAdattato = $codiceFiscale;
+        foreach (self::LISTA_SOST_OMOCODIA as $posizione) {
+            $char = $codiceFiscaleAdattato[$posizione];
+            if (isset(self::LISTA_DEC_OMOCODIA[$char])) {
+                $codiceFiscaleAdattato[$posizione] = self::LISTA_DEC_OMOCODIA[$char];
+            }
+        }
+
+        // Estraggo i dati
+        $meseNascita = self::LISTA_DEC_MESI[$codiceFiscaleAdattato[8]];
+        $giornoNascita = (int) \substr($codiceFiscaleAdattato, 9, 2);
+        $sesso = ($giornoNascita > self::OFFSET_FEMMINA) ? self::CHAR_FEMMINA : self::CHAR_MASCHIO;
+
+        // Recupero giorno di nascita se Sesso=F
+        if ($sesso === self::CHAR_FEMMINA) {
+            $giornoNascita -= self::OFFSET_FEMMINA;
+        }
+
+        // Verifico che il giorno sia compatibile con il mese di nascita
+        if ($giornoNascita < 1 || $giornoNascita > self::LISTA_GIORNI_MESE[$meseNascita]) {
+            return $this->impostaErrore(5);
+        }
+
+        $this->meseNascita = $meseNascita;
+        $this->giornoNascita = \sprintf("%02d", $giornoNascita);
+        $this->sesso = $sesso;
+        $this->comuneNascita = \substr($codiceFiscaleAdattato, 11, 4);
+        $this->annoNascita = \substr($codiceFiscaleAdattato, 6, 2);
+
+        // Controlli terminati
+        $this->isValido = true;
+        $this->errore = null;
+
+        return true;
     }
 
     /**
@@ -464,15 +425,16 @@ class CodiceFiscale
     }
 
     /**
-     * Alza un'eccezione
+     * Registra l'errore di validazione e torna sempre false
      *
      * @param integer $errorNumber
-     * @throws \Exception
-     * @return void
+     * @return boolean
      */
-    private function raiseException(int $errorNumber): void
+    private function impostaErrore(int $errorNumber): bool
     {
-        $errMessage = isset($this->listaErrori[$errorNumber]) ? $this->listaErrori[$errorNumber] : "Eccezione non gestita";
-        throw new \Exception($errMessage, $errorNumber);
+        $this->errore = self::LISTA_ERRORI[$errorNumber] ?? "Eccezione non gestita";
+        $this->isValido = false;
+
+        return false;
     }
 }
