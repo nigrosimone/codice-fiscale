@@ -1,8 +1,16 @@
 # Codice Fiscale PHP
 
-[![Build Status](https://app.travis-ci.com/nigrosimone/codice-fiscale.svg?branch=master)](https://app.travis-ci.com/nigrosimone/codice-fiscale) [![Coverage Status](https://coveralls.io/repos/github/nigrosimone/CodiceFiscale/badge.svg?branch=master)](https://coveralls.io/github/nigrosimone/CodiceFiscale?branch=master)
+[![CI](https://github.com/nigrosimone/CodiceFiscale/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/nigrosimone/CodiceFiscale/actions/workflows/ci.yml) [![Coverage Status](https://coveralls.io/repos/github/nigrosimone/CodiceFiscale/badge.svg?branch=master)](https://coveralls.io/github/nigrosimone/CodiceFiscale?branch=master)
 
 Libreria PHP per la validazione dei Codici Fiscali italiani a 16 caratteri con supporto per l'omocodia. Leggera (solo 10 KB) e veloce (1'000'000 di codici fiscali validati in 3 secondi).
+
+Oltre al carattere di controllo vengono verificati la forma del codice, il mese di nascita e la
+compatibilità del giorno con il mese. Il codice del comune viene estratto ma non confrontato con
+l'elenco ANCI: un codice `valido` è formalmente coerente, non necessariamente esistente.
+
+## Requisiti
+
+PHP 7.4 o superiore (testata fino a PHP 8.4).
 
 ## Installazione
 

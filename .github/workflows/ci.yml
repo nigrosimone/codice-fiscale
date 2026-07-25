@@ -1,0 +1,123 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: read
+
+concurrency:
+  # Su una PR aggiornata più volte, annulla le esecuzioni obsolete
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Test PHP ${{ matrix.php }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      # Un fallimento su una versione non deve nascondere l'esito delle altre
+      fail-fast: false
+      matrix:
+        php:
+          - '7.4'
+          - '8.0'
+          - '8.1'
+          - '8.2'
+          - '8.3'
+          - '8.4'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+          tools: composer:v2
+          # I warning PHP non devono passare inosservati
+          ini-values: error_reporting=E_ALL, display_errors=On
+
+      - name: Valida composer.json e composer.lock
+        run: composer validate
+
+      - name: Cache dipendenze Composer
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: composer-${{ matrix.php }}-${{ hashFiles('composer.lock') }}
+          restore-keys: composer-${{ matrix.php }}-
+
+      - name: Installa dipendenze
+        run: composer install --prefer-dist --no-interaction --no-progress
+
+      - name: Lint sintassi PHP
+        run: find src tests -name '*.php' -print0 | xargs -0 -n1 -P4 php -l
+
+      - name: Coding standard (PSR-2)
+        run: composer phpcs
+
+      - name: Test unitari
+        run: vendor/bin/phpunit
+
+  coverage:
+    name: Coverage
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: xdebug
+          tools: composer:v2
+
+      - name: Installa dipendenze
+        run: composer install --prefer-dist --no-interaction --no-progress
+
+      - name: Test con coverage
+        env:
+          XDEBUG_MODE: coverage
+        run: |
+          mkdir -p build/logs
+          vendor/bin/phpunit --coverage-text --coverage-clover build/logs/clover.xml
+
+      - name: Invia a Coveralls
+        # Solo sul branch principale: nelle PR da fork il token non è disponibile
+        if: ${{ github.event_name == 'push' }}
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: vendor/bin/php-coveralls -v
+
+  audit:
+    name: Audit dipendenze
+    runs-on: ubuntu-latest
+    # Informativo: riguarda le sole dipendenze di sviluppo, che non vengono
+    # distribuite insieme alla libreria, quindi non blocca la pipeline
+    continue-on-error: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+          tools: composer:v2
+
+      - name: Audit
+        run: composer audit --locked
