@@ -94,6 +94,12 @@ jobs:
           mkdir -p build/logs
           vendor/bin/phpunit --coverage-text --coverage-clover build/logs/clover.xml
 
+      - name: Verifica che il report sia stato generato
+        # Senza filtro configurato PHPUnit non scrive il report ma esce comunque
+        # con esito positivo: senza questo controllo il problema emerge solo più
+        # tardi, come stack trace poco leggibile di php-coveralls
+        run: test -s build/logs/clover.xml
+
       - name: Invia a Coveralls
         # Solo sul branch principale: nelle PR da fork il token non è disponibile
         if: ${{ github.event_name == 'push' }}
