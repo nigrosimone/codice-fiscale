@@ -1,6 +1,6 @@
 # Codice Fiscale PHP
 
-[![CI](https://github.com/nigrosimone/CodiceFiscale/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/nigrosimone/CodiceFiscale/actions/workflows/ci.yml) [![Coverage Status](https://coveralls.io/repos/github/nigrosimone/CodiceFiscale/badge.svg?branch=master)](https://coveralls.io/github/nigrosimone/CodiceFiscale?branch=master)
+[![CI](https://github.com/nigrosimone/codice-fiscale/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/nigrosimone/codice-fiscale/actions/workflows/ci.yml) [![Coverage Status](https://coveralls.io/repos/github/nigrosimone/CodiceFiscale/badge.svg?branch=master)](https://coveralls.io/github/nigrosimone/CodiceFiscale?branch=master)
 
 Libreria PHP per la validazione dei Codici Fiscali italiani a 16 caratteri con supporto per l'omocodia. Leggera (solo 10 KB) e veloce (1'000'000 di codici fiscali validati in 3 secondi).
 
