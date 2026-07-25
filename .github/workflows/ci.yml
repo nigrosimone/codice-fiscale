@@ -104,9 +104,6 @@ jobs:
   audit:
     name: Audit dipendenze
     runs-on: ubuntu-latest
-    # Informativo: riguarda le sole dipendenze di sviluppo, che non vengono
-    # distribuite insieme alla libreria, quindi non blocca la pipeline
-    continue-on-error: true
 
     steps:
       - name: Checkout
