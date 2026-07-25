@@ -123,6 +123,11 @@ class CodiceFiscaleTest extends TestCase
             ],
             [
                 "RSSLRA80A41H501X"
+            ],
+            // Il 29 febbraio deve restare valido: l'anno è su due cifre, quindi
+            // il secolo (e la bisestilità) non sono determinabili
+            [
+                "RSSMRA85B29A056W"
             ]
         ];
     }
@@ -183,8 +188,101 @@ class CodiceFiscaleTest extends TestCase
             ],
             [
                 "RNCSTVQXLUFMLQL"
+            ],
+            // Checksum corretto ma mese inesistente: la lettera del mese deve essere
+            // una delle dodici in uso, non un qualsiasi [A-Z]
+            [
+                "RSSMRA85F10A056O"
+            ],
+            [
+                "RSSMRA85Z10A056Y"
+            ],
+            // Checksum corretto ma giorno di nascita fuori range
+            [
+                "RSSMRA85T00A056O"
+            ],
+            [
+                "RSSMRA85T32A056V"
+            ],
+            // 40 non è né un giorno maschile (1-31) né femminile (41-71)
+            [
+                "RSSMRA85T40A056S"
+            ],
+            // Anche in forma omocodica (4L -> 40)
+            [
+                "RSSMRA85T4LA056V"
+            ],
+            // 99 diventerebbe il 59 giorno del mese
+            [
+                "RSSMRA85T99A056R"
+            ],
+            // Giorno non compatibile con il mese
+            [
+                "RSSMRA85D31A056J"
+            ],
+            [
+                "RSSMRA85B30A056D"
+            ],
+            [
+                "RSSMRA85D71A056N"
+            ],
+            // Input non alfanumerico della lunghezza giusta: non deve generare warning
+            [
+                "----------------"
+            ],
+            // Stringa UTF-8 da 8 caratteri ma 16 byte
+            [
+                "èèèèèèèè"
+            ],
+            // empty("0") è true: l'errore deve essere sulla lunghezza, non sull'assenza
+            [
+                "0"
             ]
         ];
+    }
+
+    /**
+     * Nessun input, per quanto malformato, deve produrre warning/notice PHP
+     *
+     * @dataProvider badDataProvider
+     */
+    public function test_checker_does_not_emit_php_errors($badFiscalCode)
+    {
+        $errori = [];
+        set_error_handler(function ($severity, $message) use (&$errori) {
+            $errori[] = $message;
+            return true;
+        });
+
+        try {
+            $chk = new CodiceFiscale();
+            $chk->validaCodiceFiscale($badFiscalCode);
+        } finally {
+            restore_error_handler();
+        }
+
+        self::assertSame([], $errori, "Errori PHP emessi per '$badFiscalCode'");
+    }
+
+    /**
+     * Il messaggio di errore deve essere sempre uno di quelli previsti dalla classe,
+     * mai un dettaglio interno del runtime
+     *
+     * @dataProvider badDataProvider
+     */
+    public function test_error_messages_are_from_the_known_list($badFiscalCode)
+    {
+        $chk = new CodiceFiscale();
+        $chk->validaCodiceFiscale($badFiscalCode);
+
+        self::assertContains($chk->getErrore(), [
+            "Codice da analizzare assente",
+            "Lunghezza codice da analizzare non corretta",
+            "Il codice da analizzare contiene caratteri non corretti",
+            "Carattere non valido in decodifica omocodia",
+            "Codice fiscale non corretto",
+            "Data di nascita non valida"
+        ], "Messaggio di errore inatteso per '$badFiscalCode'");
     }
 
     /**
