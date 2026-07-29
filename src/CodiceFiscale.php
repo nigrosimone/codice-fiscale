@@ -21,12 +21,18 @@ class CodiceFiscale
      * Il controllo viene eseguito PRIMA di ogni accesso alle tabelle di decodifica,
      * in modo che nessun carattere estraneo possa raggiungerle.
      *
+     * La lettera iniziale del codice catastale e' limitata a quelle realmente in uso:
+     * i comuni italiani vanno da A a M sull'alfabeto italiano, che non comprende la J
+     * e la K, mentre la Z e' riservata agli stati esteri. Le lettere da N a Y non sono
+     * mai state assegnate. Restano invece non verificate le tre cifre successive:
+     * non tutti i codici formalmente ammessi esistono nell'elenco ANCI.
+     *
      * La regex ammette una lettera di omocodia in ognuna delle sette posizioni in
      * modo indipendente: che le sostituzioni siano contigue e allineate a destra
      * e' verificato a parte, in fase di decodifica.
      */
     private const REGEX_CODICEFISCALE =
-        '/^[A-Z]{6}[0-9LMNPQRSTUV]{2}[ABCDEHLMPRST][0-9LMNPQRSTUV]{2}[A-Z][0-9LMNPQRSTUV]{3}[A-Z]$/';
+        '/^[A-Z]{6}[0-9LMNPQRSTUV]{2}[ABCDEHLMPRST][0-9LMNPQRSTUV]{2}[A-ILMZ][0-9LMNPQRSTUV]{3}[A-Z]$/';
 
     // Lunghezza del codice fiscale
     private const LUNGHEZZA_CODICEFISCALE = 16;

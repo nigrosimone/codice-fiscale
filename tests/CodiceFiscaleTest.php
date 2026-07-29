@@ -247,6 +247,14 @@ class CodiceFiscaleTest extends TestCase
             ],
             [
                 "LRNCST94B08FM0QR"
+            ],
+            // Lettera del codice catastale mai assegnata: checksum corretto,
+            // ma nessun comune né stato estero può avere quel codice
+            [
+                "RSSMRA85B01J056I"
+            ],
+            [
+                "RSSMRA85B01W056V"
             ]
         ];
     }
@@ -369,6 +377,86 @@ class CodiceFiscaleTest extends TestCase
             ["LRNCST94B08FM0QR", "la 15ª e la 13ª sono alterate ma la 14ª no"],
             ["LRNCST94BL8F1LQV", "la 10ª è alterata ma l'11ª e la 13ª no"],
             ["LRNCSTVQB08F10QA", "la 7ª e l'8ª sono alterate ma la 10ª, l'11ª e la 13ª no"]
+        ];
+    }
+
+    /**
+     * La lettera iniziale del codice catastale è limitata a quelle realmente
+     * assegnate: A-M per i comuni italiani (l'alfabeto italiano non ha J e K)
+     * e Z per gli stati esteri.
+     *
+     * @dataProvider comuneLetteraAmmessaDataProvider
+     */
+    public function test_lettera_comune_ammessa($codiceFiscale, $lettera)
+    {
+        $cf = new CodiceFiscale();
+
+        self::assertTrue(
+            $cf->validaCodiceFiscale($codiceFiscale),
+            "Lettera $lettera rifiutata: " . $cf->getErrore()
+        );
+        self::assertSame($lettera . "056", $cf->getComuneNascita(), $codiceFiscale);
+    }
+
+    public function comuneLetteraAmmessaDataProvider(): array
+    {
+        return [
+            ["RSSMRA85B01A056Z", "A"],
+            ["RSSMRA85B01B056A", "B"],
+            ["RSSMRA85B01C056B", "C"],
+            ["RSSMRA85B01D056C", "D"],
+            ["RSSMRA85B01E056D", "E"],
+            ["RSSMRA85B01F056E", "F"],
+            ["RSSMRA85B01G056F", "G"],
+            ["RSSMRA85B01H056G", "H"],
+            ["RSSMRA85B01I056H", "I"],
+            ["RSSMRA85B01L056K", "L"],
+            ["RSSMRA85B01M056L", "M"],
+            // Stati esteri
+            ["RSSMRA85B01Z056Y", "Z"]
+        ];
+    }
+
+    /**
+     * J e K non esistono nell'alfabeto italiano e non sono mai state usate nei
+     * codici catastali; da N a Y non è mai stata assegnata alcuna lettera.
+     * Il carattere di controllo è corretto, ma il comune non è rappresentabile.
+     *
+     * @dataProvider comuneLetteraNonAmmessaDataProvider
+     */
+    public function test_lettera_comune_non_ammessa($codiceFiscale, $lettera)
+    {
+        $cf = new CodiceFiscale();
+
+        self::assertFalse(
+            $cf->validaCodiceFiscale($codiceFiscale),
+            "Lettera $lettera accettata come codice catastale"
+        );
+        self::assertSame(
+            "Il codice da analizzare contiene caratteri non corretti",
+            $cf->getErrore(),
+            $codiceFiscale
+        );
+        self::assertNull($cf->getComuneNascita(), $codiceFiscale);
+    }
+
+    public function comuneLetteraNonAmmessaDataProvider(): array
+    {
+        return [
+            ["RSSMRA85B01J056I", "J"],
+            ["RSSMRA85B01K056J", "K"],
+            ["RSSMRA85B01N056M", "N"],
+            ["RSSMRA85B01O056N", "O"],
+            ["RSSMRA85B01P056O", "P"],
+            ["RSSMRA85B01Q056P", "Q"],
+            ["RSSMRA85B01R056Q", "R"],
+            ["RSSMRA85B01S056R", "S"],
+            ["RSSMRA85B01T056S", "T"],
+            ["RSSMRA85B01U056T", "U"],
+            ["RSSMRA85B01V056U", "V"],
+            ["RSSMRA85B01W056V", "W"],
+            ["RSSMRA85B01X056W", "X"],
+            ["RSSMRA85B01Y056X", "Y"]
         ];
     }
 
