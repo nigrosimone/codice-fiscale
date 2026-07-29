@@ -20,9 +20,19 @@ class CodiceFiscale
      * mentre il mese e' limitato alle dodici lettere effettivamente in uso.
      * Il controllo viene eseguito PRIMA di ogni accesso alle tabelle di decodifica,
      * in modo che nessun carattere estraneo possa raggiungerle.
+     *
+     * La lettera iniziale del codice catastale e' limitata a quelle realmente in uso:
+     * i comuni italiani vanno da A a M sull'alfabeto italiano, che non comprende la J
+     * e la K, mentre la Z e' riservata agli stati esteri. Le lettere da N a Y non sono
+     * mai state assegnate. Restano invece non verificate le tre cifre successive:
+     * non tutti i codici formalmente ammessi esistono nell'elenco ANCI.
+     *
+     * La regex ammette una lettera di omocodia in ognuna delle sette posizioni in
+     * modo indipendente: che le sostituzioni siano contigue e allineate a destra
+     * e' verificato a parte, in fase di decodifica.
      */
     private const REGEX_CODICEFISCALE =
-        '/^[A-Z]{6}[0-9LMNPQRSTUV]{2}[ABCDEHLMPRST][0-9LMNPQRSTUV]{2}[A-Z][0-9LMNPQRSTUV]{3}[A-Z]$/';
+        '/^[A-Z]{6}[0-9LMNPQRSTUV]{2}[ABCDEHLMPRST][0-9LMNPQRSTUV]{2}[A-ILMZ][0-9LMNPQRSTUV]{3}[A-Z]$/';
 
     // Lunghezza del codice fiscale
     private const LUNGHEZZA_CODICEFISCALE = 16;
@@ -56,16 +66,22 @@ class CodiceFiscale
     ];
 
     /**
-     * Posizioni caratteri interessati ad alterazione di codifica in caso di omocodia
+     * Posizioni dei caratteri numerici interessati dall'alterazione per omocodia,
+     * elencate DA DESTRA A SINISTRA.
+     *
+     * L'ordine e' significativo: la sostituzione parte dalla cifra piu' a destra e
+     * procede verso sinistra senza salti, quindi le posizioni alterate sono sempre
+     * un prefisso di questa lista. Percorrerla in quest'ordine permette di
+     * verificare la regola in un solo passaggio.
      */
     private const LISTA_SOST_OMOCODIA = [
-        6,
-        7,
-        9,
-        10,
-        12,
+        14,
         13,
-        14
+        12,
+        10,
+        9,
+        7,
+        6
     ];
 
     /**
@@ -203,7 +219,7 @@ class CodiceFiscale
         0 => "Codice da analizzare assente",
         1 => "Lunghezza codice da analizzare non corretta",
         2 => "Il codice da analizzare contiene caratteri non corretti",
-        3 => "Carattere non valido in decodifica omocodia",
+        3 => "Alterazione per omocodia non valida",
         4 => "Codice fiscale non corretto",
         5 => "Data di nascita non valida"
     ];
@@ -371,13 +387,23 @@ class CodiceFiscale
             return $this->impostaErrore(4);
         }
 
-        // Sostituzione per risolvere eventuali omocodie
+        // Sostituzione per risolvere eventuali omocodie.
+        // Le posizioni sono percorse da destra a sinistra, lo stesso verso in cui
+        // l'Agenzia delle Entrate applica l'alterazione: una volta incontrata una
+        // cifra non alterata, nessuna delle posizioni piu' a sinistra puo' essere
+        // una lettera, altrimenti il codice non e' emettibile.
         $codiceFiscaleAdattato = $codiceFiscale;
+        $attesaCifra = false;
         foreach (self::LISTA_SOST_OMOCODIA as $posizione) {
             $char = $codiceFiscaleAdattato[$posizione];
-            if (isset(self::LISTA_DEC_OMOCODIA[$char])) {
-                $codiceFiscaleAdattato[$posizione] = self::LISTA_DEC_OMOCODIA[$char];
+            if (!isset(self::LISTA_DEC_OMOCODIA[$char])) {
+                $attesaCifra = true;
+                continue;
             }
+            if ($attesaCifra) {
+                return $this->impostaErrore(3);
+            }
+            $codiceFiscaleAdattato[$posizione] = self::LISTA_DEC_OMOCODIA[$char];
         }
 
         // Estraggo i dati

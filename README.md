@@ -5,8 +5,17 @@
 Libreria PHP per la validazione dei Codici Fiscali italiani a 16 caratteri con supporto per l'omocodia. Leggera (solo 10 KB) e veloce (1'000'000 di codici fiscali validati in 3 secondi).
 
 Oltre al carattere di controllo vengono verificati la forma del codice, il mese di nascita e la
-compatibilità del giorno con il mese. Il codice del comune viene estratto ma non confrontato con
-l'elenco ANCI: un codice `valido` è formalmente coerente, non necessariamente esistente.
+compatibilità del giorno con il mese. Del codice catastale viene controllata la lettera iniziale,
+limitata a quelle realmente assegnate (`A`-`M` per i comuni italiani, dove l'alfabeto italiano non
+comprende `J` e `K`, e `Z` per gli stati esteri), mentre le tre cifre successive non sono
+confrontate con l'elenco ANCI: un codice `valido` è formalmente coerente, non necessariamente
+esistente.
+
+L'alterazione per omocodia è accettata solo nella forma prevista dal DM 23/12/1976: la
+sostituzione delle cifre con le corrispondenti lettere parte dal carattere numerico più a destra
+e prosegue verso sinistra senza salti. Un codice in cui una cifra risulta sostituita mentre una
+posizione più a destra è rimasta numerica non è emettibile e viene rifiutato, anche quando il
+carattere di controllo è corretto.
 
 ## Requisiti
 
