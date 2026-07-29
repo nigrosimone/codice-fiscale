@@ -80,10 +80,10 @@ class CodiceFiscaleTest extends TestCase
                 "DLCFNC01L46H50MJ"
             ],
             [
-                "LMRBHM74A01Z3P0U"
+                "LMRBHM74A01Z3PLX"
             ],
             [
-                "CNTPTR60C29H5L1W"
+                "CNTPTR60C29H5LMO"
             ],
             [
                 "MRARSS75P14H501I"
@@ -91,6 +91,8 @@ class CodiceFiscaleTest extends TestCase
             [
                 "MRARSS82M56F205J"
             ],
+            // Gli otto livelli di omocodia della stessa base: nessuna sostituzione
+            // e poi una cifra alla volta, da destra verso sinistra
             [
                 "LRNCST94B08F104C"
             ],
@@ -98,22 +100,19 @@ class CodiceFiscaleTest extends TestCase
                 "LRNCST94B08F10QZ"
             ],
             [
-                "LRNCST94B08F1L4N"
+                "LRNCST94B08F1LQK"
             ],
             [
-                "LRNCST94B08FM04U"
+                "LRNCST94B08FMLQC"
             ],
             [
-                "LRNCST94B0UF104Z"
+                "LRNCST94B0UFMLQZ"
             ],
             [
-                "LRNCSTV4B08F104R"
+                "LRNCST94BLUFMLQK"
             ],
             [
-                "LRNCST94BL8F1LQV"
-            ],
-            [
-                "LRNCSTVQB08F10QA"
+                "LRNCST9QBLUFMLQW"
             ],
             [
                 "LRNCSTVQBLUFMLQL"
@@ -237,6 +236,17 @@ class CodiceFiscaleTest extends TestCase
             // empty("0") è true: l'errore deve essere sulla lunghezza, non sull'assenza
             [
                 "0"
+            ],
+            // Omocodia applicata in posizioni non contigue o non allineate a destra:
+            // checksum corretto, ma forma non emettibile
+            [
+                "LRNCST94B08F1L4N"
+            ],
+            [
+                "LRNCSTV4B08F104R"
+            ],
+            [
+                "LRNCST94B08FM0QR"
             ]
         ];
     }
@@ -279,10 +289,87 @@ class CodiceFiscaleTest extends TestCase
             "Codice da analizzare assente",
             "Lunghezza codice da analizzare non corretta",
             "Il codice da analizzare contiene caratteri non corretti",
-            "Carattere non valido in decodifica omocodia",
+            "Alterazione per omocodia non valida",
             "Codice fiscale non corretto",
             "Data di nascita non valida"
         ], "Messaggio di errore inatteso per '$badFiscalCode'");
+    }
+
+    /**
+     * L'alterazione per omocodia parte dalla cifra più a destra e prosegue verso
+     * sinistra senza salti (DM 23/12/1976, art. 7). Tutti gli otto livelli della
+     * stessa base sono validi e descrivono la stessa persona.
+     *
+     * @dataProvider omocodiaCanonicaDataProvider
+     */
+    public function test_omocodia_canonica_e_accettata($codiceFiscale, $livello)
+    {
+        $cf = new CodiceFiscale();
+
+        self::assertTrue(
+            $cf->validaCodiceFiscale($codiceFiscale),
+            "Livello $livello ($codiceFiscale) rifiutato: " . $cf->getErrore()
+        );
+
+        // Tutti i livelli decodificano agli stessi dati anagrafici
+        self::assertSame("08", $cf->getGiornoNascita(), "giorno, livello $livello");
+        self::assertSame("02", $cf->getMeseNascita(), "mese, livello $livello");
+        self::assertSame("94", $cf->getAnnoNascita(), "anno, livello $livello");
+        self::assertSame("F104", $cf->getComuneNascita(), "comune, livello $livello");
+        self::assertSame("M", $cf->getSesso(), "sesso, livello $livello");
+    }
+
+    public function omocodiaCanonicaDataProvider(): array
+    {
+        // Base LRNCST94B08F104C, sostituzioni progressive sulle posizioni
+        // 15, 14, 13, 11, 10, 8, 7 (1-based), cioè da destra verso sinistra
+        return [
+            ["LRNCST94B08F104C", 0],
+            ["LRNCST94B08F10QZ", 1],
+            ["LRNCST94B08F1LQK", 2],
+            ["LRNCST94B08FMLQC", 3],
+            ["LRNCST94B0UFMLQZ", 4],
+            ["LRNCST94BLUFMLQK", 5],
+            ["LRNCST9QBLUFMLQW", 6],
+            ["LRNCSTVQBLUFMLQL", 7]
+        ];
+    }
+
+    /**
+     * Un codice in cui una cifra è stata sostituita mentre una posizione più a
+     * destra è rimasta numerica non è emettibile dall'Agenzia delle Entrate:
+     * il carattere di controllo è corretto, ma la forma dell'omocodia non lo è.
+     *
+     * @dataProvider omocodiaNonCanonicaDataProvider
+     */
+    public function test_omocodia_non_canonica_e_rifiutata($codiceFiscale, $descrizione)
+    {
+        $cf = new CodiceFiscale();
+
+        self::assertFalse(
+            $cf->validaCodiceFiscale($codiceFiscale),
+            "$codiceFiscale accettato ma $descrizione"
+        );
+        self::assertSame("Alterazione per omocodia non valida", $cf->getErrore(), $codiceFiscale);
+        self::assertNull($cf->getGiornoNascita(), $codiceFiscale);
+        self::assertNull($cf->getSesso(), $codiceFiscale);
+    }
+
+    public function omocodiaNonCanonicaDataProvider(): array
+    {
+        return [
+            // Una sola posizione alterata, ma non quella più a destra
+            ["LRNCST94B08F1L4N", "è alterata solo la 14ª cifra, la 15ª è ancora numerica"],
+            ["LRNCST94B08FM04U", "è alterata solo la 13ª cifra"],
+            ["LRNCST94B0UF104Z", "è alterata solo l'11ª cifra"],
+            ["LRNCST94BL8F104N", "è alterata solo la 10ª cifra"],
+            ["LRNCST9QB08F104O", "è alterata solo l'8ª cifra"],
+            ["LRNCSTV4B08F104R", "è alterata solo la 7ª cifra"],
+            // Sostituzioni non contigue: buco nella sequenza
+            ["LRNCST94B08FM0QR", "la 15ª e la 13ª sono alterate ma la 14ª no"],
+            ["LRNCST94BL8F1LQV", "la 10ª è alterata ma l'11ª e la 13ª no"],
+            ["LRNCSTVQB08F10QA", "la 7ª e l'8ª sono alterate ma la 10ª, l'11ª e la 13ª no"]
+        ];
     }
 
     /**
