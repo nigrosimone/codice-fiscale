@@ -33,7 +33,7 @@
 		"bench" : "php ./benchmark/test.php"
 
 	},
-	"homepage" : "https://github.com/nigrosimone/CodiceFiscale",
+	"homepage" : "https://github.com/nigrosimone/codice-fiscale",
 	"authors" : [{
 			"name" : "Simone Nigro",
 			"email" : "nigro.simone@gmail.com",
@@ -42,16 +42,16 @@
 	],
 	"support" : {
 		"email" : "nigro.simone@gmail.com",
-		"issues" : "https://github.com/nigrosimone/CodiceFiscale/issues",
-		"source" : "https://github.com/nigrosimone/CodiceFiscale"
+		"issues" : "https://github.com/nigrosimone/codice-fiscale/issues",
+		"source" : "https://github.com/nigrosimone/codice-fiscale"
 	},
 	"keywords" : [
 		"codice fiscale", "omocodia", "php"
 	],
 	"repositories" : [{
 			"type" : "git",
-			"url" : "https://github.com/nigrosimone/CodiceFiscale.git",
-			"name" : "nigrosimone/CodiceFiscale"
+			"url" : "https://github.com/nigrosimone/codice-fiscale.git",
+			"name" : "nigrosimone/codicefiscale"
 		}
 	]
 }
