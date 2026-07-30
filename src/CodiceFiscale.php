@@ -251,7 +251,8 @@ class CodiceFiscale
         2 => "Il codice da analizzare contiene caratteri non corretti",
         3 => "Alterazione per omocodia non valida",
         4 => "Codice fiscale non corretto",
-        5 => "Data di nascita non valida"
+        5 => "Data di nascita non valida",
+        6 => "Codice del comune non valido"
     ];
 
     /**
@@ -302,6 +303,22 @@ class CodiceFiscale
      * @var string|null
      */
     private ?string $errore = null;
+
+    /**
+     * Validatore opzionale del codice catastale.
+     *
+     * La classe verifica la forma del codice catastale (lettera iniziale fra
+     * quelle assegnate, poi tre cifre) ma non le tre cifre in se': servirebbe
+     * l'elenco completo, che comprende anche i comuni soppressi, perche' il
+     * codice fiscale di chi vi e' nato riporta il codice dell'epoca. Chi
+     * disponga di quell'elenco lo puo' innestare qui.
+     *
+     * E' configurazione, non stato della singola validazione: resta impostato
+     * fra chiamate successive e resettaProprieta() non lo azzera.
+     *
+     * @var \Closure|null
+     */
+    private ?\Closure $validatoreComune = null;
 
     /**
      * Torna true se il Codice Fiscale è valido
@@ -371,6 +388,29 @@ class CodiceFiscale
     public function getGiornoNascita(): ?string
     {
         return $this->giornoNascita;
+    }
+
+    /**
+     * Innesta un validatore per il codice catastale, o lo rimuove passando null.
+     *
+     * Il callable riceve il codice catastale di 4 caratteri gia' risolto da
+     * eventuale omocodia (per "DLCFNC01L46H50MJ" riceve "H501", non "H50M") e
+     * deve tornare true se il codice esiste. Senza validatore il comportamento
+     * della classe non cambia.
+     *
+     * L'elenco va procurato a parte: quello ISTAT dei comuni contiene i soli
+     * comuni attivi e usarlo da solo farebbe rifiutare i codici fiscali di chi
+     * e' nato in un comune poi soppresso. Serve l'elenco completo dell'Agenzia
+     * delle Entrate, che comprende i soppressi e gli stati esteri.
+     *
+     * @param callable|null $validatore
+     * @return void
+     */
+    public function setValidatoreComune(?callable $validatore): void
+    {
+        $this->validatoreComune = $validatore === null
+            ? null
+            : \Closure::fromCallable($validatore);
     }
 
     /**
@@ -451,10 +491,17 @@ class CodiceFiscale
             return $this->impostaErrore(5);
         }
 
+        $comuneNascita = \substr($codiceFiscaleAdattato, 11, 4);
+
+        // Verifica opzionale del codice catastale contro un elenco esterno
+        if ($this->validatoreComune !== null && !($this->validatoreComune)($comuneNascita)) {
+            return $this->impostaErrore(6);
+        }
+
         $this->meseNascita = $meseNascita;
         $this->giornoNascita = \sprintf("%02d", $giornoNascita);
         $this->sesso = $sesso;
-        $this->comuneNascita = \substr($codiceFiscaleAdattato, 11, 4);
+        $this->comuneNascita = $comuneNascita;
         $this->annoNascita = \substr($codiceFiscaleAdattato, 6, 2);
 
         // Controlli terminati
