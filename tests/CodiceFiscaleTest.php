@@ -307,7 +307,8 @@ class CodiceFiscaleTest extends TestCase
             "Il codice da analizzare contiene caratteri non corretti",
             "Alterazione per omocodia non valida",
             "Codice fiscale non corretto",
-            "Data di nascita non valida"
+            "Data di nascita non valida",
+            "Codice del comune non valido"
         ], "Messaggio di errore inatteso per '$badFiscalCode'");
     }
 
@@ -531,6 +532,124 @@ class CodiceFiscaleTest extends TestCase
     }
 
     /**
+     * Senza validatore innestato il comportamento non cambia: un codice
+     * catastale formalmente corretto ma inesistente resta valido.
+     */
+    public function test_senza_validatore_comune_il_comportamento_non_cambia()
+    {
+        $cf = new CodiceFiscale();
+
+        // A999 non è assegnato ad alcun comune
+        self::assertTrue($cf->validaCodiceFiscale("RSSMRA85B01A999D"), $cf->getErrore() ?? "");
+        self::assertSame("A999", $cf->getComuneNascita());
+    }
+
+    /**
+     * Con un validatore che rifiuta, il codice è invalido e le proprietà
+     * restano azzerate.
+     */
+    public function test_validatore_comune_che_rifiuta()
+    {
+        $cf = new CodiceFiscale();
+        $cf->setValidatoreComune(function (string $comune): bool {
+            return $comune === "H501";
+        });
+
+        self::assertFalse($cf->validaCodiceFiscale("RSSMRA85B01A999D"));
+        self::assertSame("Codice del comune non valido", $cf->getErrore());
+        self::assertNull($cf->getComuneNascita());
+        self::assertNull($cf->getGiornoNascita());
+        self::assertNull($cf->getSesso());
+        self::assertFalse($cf->getIsValido());
+
+        // Lo stesso validatore accetta il comune che conosce
+        self::assertTrue($cf->validaCodiceFiscale("RSSMRA85B01H501Y"), $cf->getErrore() ?? "");
+        self::assertSame("H501", $cf->getComuneNascita());
+    }
+
+    /**
+     * Il validatore riceve il codice già risolto da omocodia: per
+     * "DLCFNC01L46H50MJ" deve vedere "H501", non "H50M".
+     */
+    public function test_validatore_comune_riceve_il_codice_risolto_da_omocodia()
+    {
+        $visti = [];
+        $cf = new CodiceFiscale();
+        $cf->setValidatoreComune(function (string $comune) use (&$visti): bool {
+            $visti[] = $comune;
+            return true;
+        });
+
+        self::assertTrue($cf->validaCodiceFiscale("DLCFNC01L46H50MJ"), $cf->getErrore() ?? "");
+        self::assertSame(["H501"], $visti);
+    }
+
+    /**
+     * Il validatore è configurazione, non stato: sopravvive alle chiamate
+     * successive e si rimuove passando null.
+     */
+    public function test_validatore_comune_persiste_e_si_rimuove()
+    {
+        $cf = new CodiceFiscale();
+        $cf->setValidatoreComune(function (string $comune): bool {
+            return false;
+        });
+
+        self::assertFalse($cf->validaCodiceFiscale("RSSMRA85B01H501Y"));
+        // seconda chiamata: il validatore non è stato azzerato dal reset
+        self::assertFalse($cf->validaCodiceFiscale("RSSMRA85B01H501Y"));
+        self::assertSame("Codice del comune non valido", $cf->getErrore());
+
+        $cf->setValidatoreComune(null);
+        self::assertTrue($cf->validaCodiceFiscale("RSSMRA85B01H501Y"), $cf->getErrore() ?? "");
+    }
+
+    /**
+     * Il validatore non deve essere invocato se il codice è già scartato dai
+     * controlli precedenti: è il punto più costoso della catena.
+     */
+    public function test_validatore_comune_non_invocato_se_il_codice_e_gia_invalido()
+    {
+        $invocazioni = 0;
+        $cf = new CodiceFiscale();
+        $cf->setValidatoreComune(function (string $comune) use (&$invocazioni): bool {
+            $invocazioni++;
+            return true;
+        });
+
+        $cf->validaCodiceFiscale("");                    // assente
+        $cf->validaCodiceFiscale("RSSMRA85B01H501");      // lunghezza
+        $cf->validaCodiceFiscale("RSSMRA85B01J056I");     // lettera comune non ammessa
+        $cf->validaCodiceFiscale("AABMRA85B01A056O");     // terna non producibile
+        $cf->validaCodiceFiscale("LRNCST94B08F1L4N");     // omocodia non canonica
+        $cf->validaCodiceFiscale("RSSMRA85B01H501X");     // checksum errato
+        $cf->validaCodiceFiscale("RSSMRA85B32A056H");     // data non valida
+
+        self::assertSame(0, $invocazioni, "Il validatore è stato invocato inutilmente");
+    }
+
+    /**
+     * Qualunque forma di callable deve essere accettata, non solo le closure.
+     */
+    public function test_validatore_comune_accetta_qualsiasi_callable()
+    {
+        $cf = new CodiceFiscale();
+
+        $cf->setValidatoreComune([$this, 'soloH501']);
+        self::assertTrue($cf->validaCodiceFiscale("RSSMRA85B01H501Y"), $cf->getErrore() ?? "");
+        self::assertFalse($cf->validaCodiceFiscale("RSSMRA85B01A999D"));
+
+        $cf->setValidatoreComune(new ValidatoreComuneInvocabile());
+        self::assertTrue($cf->validaCodiceFiscale("RSSMRA85B01A056Z"), $cf->getErrore() ?? "");
+        self::assertFalse($cf->validaCodiceFiscale("RSSMRA85B01H501Y"));
+    }
+
+    public function soloH501(string $comune): bool
+    {
+        return $comune === "H501";
+    }
+
+    /**
      * @dataProvider parsingDataProvider
      */
     public function test_parsing_codice_fiscale($codiceFiscale, $expected)
@@ -583,5 +702,17 @@ class CodiceFiscaleTest extends TestCase
                 ]
             ]
         ];
+    }
+}
+
+/**
+ * Oggetto invocabile: serve a dimostrare che setValidatoreComune() accetta
+ * qualunque callable, non solo le closure.
+ */
+class ValidatoreComuneInvocabile
+{
+    public function __invoke(string $comune): bool
+    {
+        return $comune === "A056";
     }
 }

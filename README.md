@@ -53,6 +53,33 @@ else
 
 Demo [online](https://phpsandbox.io/e/x/h1r2e)
 
+### Validazione del codice catastale
+
+Le tre cifre del codice catastale non sono verificate: servirebbe l'elenco completo, e
+`setValidatoreComune()` permette di innestarlo senza appesantire la libreria. Il callable riceve
+il codice di 4 caratteri già risolto da eventuale omocodia e torna `true` se esiste:
+
+```php
+$comuni = ['H501', 'F205', 'L219', 'Z133']; // il tuo elenco
+
+$cf = new CodiceFiscale();
+$cf->setValidatoreComune(function (string $comune) use ($comuni): bool {
+    return in_array($comune, $comuni, true);
+});
+
+$cf->validaCodiceFiscale('MRARSS75P14H501I'); // true
+$cf->validaCodiceFiscale('MRARSS75P14A999N'); // false, "Codice del comune non valido"
+```
+
+Il validatore è invocato per ultimo, solo sui codici che hanno superato tutti gli altri
+controlli, e si rimuove passando `null`.
+
+> **Attenzione all'elenco che usi.** Il [CSV ISTAT dei comuni](https://www.istat.it/it/archivio/6789)
+> contiene i soli comuni **attivi**: usarlo da solo farebbe rifiutare i codici fiscali di chi è
+> nato in un comune poi soppresso, e sono circa 2.500 codici catastali su 10.400 mai assegnati.
+> Serve l'elenco completo dell'[Archivio Comuni e Stati Esteri](https://www.agenziaentrate.gov.it/portale/schede/fabbricatiterreni/archivio-comuni-e-stati-esteri/consultazione-archivio-comuni-stati-esteri)
+> dell'Agenzia delle Entrate, che comprende i comuni soppressi e gli stati esteri (codici `Z`).
+
 ## Sviluppo
 
 Clona il progetto:
