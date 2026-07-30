@@ -255,6 +255,14 @@ class CodiceFiscaleTest extends TestCase
             ],
             [
                 "RSSMRA85B01W056V"
+            ],
+            // Terna di cognome/nome non producibile: le consonanti vengono
+            // sempre prima delle vocali
+            [
+                "AABMRA85B01A056O"
+            ],
+            [
+                "RSSABE85B01A056J"
             ]
         ];
     }
@@ -457,6 +465,68 @@ class CodiceFiscaleTest extends TestCase
             ["RSSMRA85B01W056V", "W"],
             ["RSSMRA85B01X056W", "X"],
             ["RSSMRA85B01Y056X", "Y"]
+        ];
+    }
+
+    /**
+     * Le terne di cognome e nome si costruiscono prendendo le consonanti
+     * nell'ordine, poi le vocali nell'ordine, riempiendo con X se le lettere
+     * sono meno di tre. Tutte le forme risultanti devono essere accettate,
+     * compreso il riempimento.
+     *
+     * @dataProvider ternaValidaDataProvider
+     */
+    public function test_terna_cognome_nome_valida($codiceFiscale, $descrizione)
+    {
+        $cf = new CodiceFiscale();
+
+        self::assertTrue(
+            $cf->validaCodiceFiscale($codiceFiscale),
+            "$codiceFiscale rifiutato ($descrizione): " . $cf->getErrore()
+        );
+    }
+
+    public function ternaValidaDataProvider(): array
+    {
+        return [
+            ["RSSMRA85B01A056Z", "consonanti piene, poi consonanti e vocale"],
+            ["DLCFNC85B01A056R", "sei consonanti"],
+            ["AIXBCX85B01A056E", "vocali e riempimento, poi consonanti e riempimento"],
+            ["EXXAXX85B01A056U", "una sola lettera per terna, doppio riempimento"],
+            ["AEIOUX85B01A056S", "tre vocali, poi due vocali e riempimento"]
+        ];
+    }
+
+    /**
+     * Una vocale non può essere seguita da una consonante diversa dalla X di
+     * riempimento: le consonanti vengono sempre prima. Il carattere di
+     * controllo è corretto, ma la terna non è producibile dall'algoritmo.
+     *
+     * @dataProvider ternaNonValidaDataProvider
+     */
+    public function test_terna_cognome_nome_non_valida($codiceFiscale, $descrizione)
+    {
+        $cf = new CodiceFiscale();
+
+        self::assertFalse(
+            $cf->validaCodiceFiscale($codiceFiscale),
+            "$codiceFiscale accettato ma $descrizione"
+        );
+        self::assertSame(
+            "Il codice da analizzare contiene caratteri non corretti",
+            $cf->getErrore(),
+            $codiceFiscale
+        );
+    }
+
+    public function ternaNonValidaDataProvider(): array
+    {
+        return [
+            ["AABMRA85B01A056O", "nel cognome la B segue due vocali"],
+            ["RSSABE85B01A056J", "nel nome la B è fra due vocali"],
+            ["MRAAXB85B01A056D", "nel nome la B segue il riempimento"],
+            ["ABXRSS85B01A056P", "nel cognome la B segue una vocale"],
+            ["AXBCST85B01A056Y", "nel cognome la B segue la X"]
         ];
     }
 

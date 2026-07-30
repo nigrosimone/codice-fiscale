@@ -5,7 +5,11 @@
 Libreria PHP per la validazione dei Codici Fiscali italiani a 16 caratteri con supporto per l'omocodia. Leggera (solo 10 KB) e veloce (1'000'000 di codici fiscali validati in 3 secondi).
 
 Oltre al carattere di controllo vengono verificati la forma del codice, il mese di nascita e la
-compatibilità del giorno con il mese. Del codice catastale viene controllata la lettera iniziale,
+compatibilità del giorno con il mese. Le terne di cognome e nome sono validate nella struttura:
+si costruiscono prendendo le consonanti nell'ordine, poi le vocali nell'ordine, riempiendo con `X`
+se le lettere disponibili sono meno di tre, quindi una vocale non può essere seguita da una
+consonante diversa dalla `X`. Sono ammesse 12.251 terne su 17.576, cioè meno della metà dei
+prefissi di sei lettere. Del codice catastale viene controllata la lettera iniziale,
 limitata a quelle realmente assegnate (`A`-`M` per i comuni italiani, dove l'alfabeto italiano non
 comprende `J` e `K`, e `Z` per gli stati esteri), mentre le tre cifre successive non sono
 confrontate con l'elenco ANCI: un codice `valido` è formalmente coerente, non necessariamente

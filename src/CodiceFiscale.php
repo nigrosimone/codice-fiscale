@@ -13,7 +13,37 @@ class CodiceFiscale
 {
 
     /**
+     * Consonanti e vocali secondo le regole del codice fiscale: la Y e' una
+     * consonante, le vocali sono le cinque dell'alfabeto latino.
+     */
+    private const CONSONANTI = 'BCDFGHJKLMNPQRSTVWXYZ';
+
+    private const VOCALI = 'AEIOU';
+
+    /**
+     * Terna di cognome o nome.
+     *
+     * Le terne non sono tre lettere qualsiasi: si prendono le consonanti
+     * nell'ordine, poi le vocali nell'ordine, e si riempie con X se le lettere
+     * disponibili sono meno di tre. La forma risultante e' sempre
+     * "consonanti, vocali, X di riempimento", quindi una vocale non puo' essere
+     * seguita da una consonante diversa dalla X. Su tre caratteri le
+     * decomposizioni possibili sono le sette elencate qui.
+     */
+    private const REGEX_TERNA = '(?:[' . self::CONSONANTI . ']{3}'
+        . '|[' . self::CONSONANTI . ']{2}[' . self::VOCALI . ']'
+        . '|[' . self::CONSONANTI . '][' . self::VOCALI . ']{2}'
+        . '|[' . self::VOCALI . ']{3}'
+        . '|[' . self::CONSONANTI . '][' . self::VOCALI . ']X'
+        . '|[' . self::VOCALI . ']{2}X'
+        . '|[' . self::VOCALI . ']XX)';
+
+    /**
      * Espressione regolare per il controllo formale del codice fiscale.
+     *
+     * Le prime sei lettere sono le due terne di cognome e nome, ognuna vincolata
+     * alla forma descritta in REGEX_TERNA: 12.251 combinazioni su 17.576, quindi
+     * meno della meta' dei prefissi di sei lettere e' ammissibile.
      *
      * Le posizioni numeriche (anno, giorno e le ultime tre cifre del comune) accettano
      * anche le lettere previste dall'alterazione per omocodia (L, M, N, P, Q, R, S, T, U, V),
@@ -31,8 +61,8 @@ class CodiceFiscale
      * modo indipendente: che le sostituzioni siano contigue e allineate a destra
      * e' verificato a parte, in fase di decodifica.
      */
-    private const REGEX_CODICEFISCALE =
-        '/^[A-Z]{6}[0-9LMNPQRSTUV]{2}[ABCDEHLMPRST][0-9LMNPQRSTUV]{2}[A-ILMZ][0-9LMNPQRSTUV]{3}[A-Z]$/';
+    private const REGEX_CODICEFISCALE = '/^' . self::REGEX_TERNA . self::REGEX_TERNA
+        . '[0-9LMNPQRSTUV]{2}[ABCDEHLMPRST][0-9LMNPQRSTUV]{2}[A-ILMZ][0-9LMNPQRSTUV]{3}[A-Z]$/';
 
     // Lunghezza del codice fiscale
     private const LUNGHEZZA_CODICEFISCALE = 16;
